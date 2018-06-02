@@ -41,21 +41,15 @@ class Empleado
   
 	 public function InsertarEmpleado()
 	 {
+		 $this->estado="activo";
 		$objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
-		$consulta =$objetoAccesoDato->RetornarConsulta("
-			INSERT into empleados (
-				usuario, 
-				clave,
-				sector,
-				perfil,
-				estado)
-			VALUES(:usuario, :clave, :sector, :perfil :estado)";
+		$consulta =$objetoAccesoDato->RetornarConsulta("INSERT into empleados (usuario, clave, sector, perfil, estado) VALUES(:usuario, :clave, :sector, :perfil, :estado)");
 
 		$consulta->bindValue(':usuario',$this->usuario, PDO::PARAM_STR);
 		$consulta->bindValue(':clave', $this->clave, PDO::PARAM_STR);
 		$consulta->bindValue(':sector', $this->sector, PDO::PARAM_STR);
 		$consulta->bindValue(':perfil', $this->perfil, PDO::PARAM_STR);
-		$consulta->bindValue(':estado', "Activo", PDO::PARAM_STR);
+		$consulta->bindValue(':estado', $this->estado, PDO::PARAM_STR);
 		
 		 $consulta->execute();
 
