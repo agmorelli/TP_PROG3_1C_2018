@@ -52,7 +52,7 @@ $app->group('/Empleados', function () {
   $this->post('/ModificarEmpleado', \EmpleadoApi::class . ':ModificarUno');
   $this->put('/Suspender', \EmpleadoApi::class . ':Suspender');  
   $this->get('/Operaciones/{id}', \EmpleadoApi::class . ':CantidadDeOperaciones');
-})/*->add(\MWparaAutentificar::class . ':VerificarUsuario')->*/->add(\MWparaCORS::class . ':HabilitarCORS8080')->add(\MWparaCORS::class . ':HabilitarCORSTodos');
+})->add(\MWparaAutentificar::class . ':VerificarUsuario')->add(\MWparaCORS::class . ':HabilitarCORS8080')->add(\MWparaCORS::class . ':HabilitarCORSTodos');
 
 
 

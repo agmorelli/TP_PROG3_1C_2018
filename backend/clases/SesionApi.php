@@ -17,7 +17,8 @@ class SesionApi
 try
 {
 
-    $empleado=Empleado::ValidarEmpleado($mail,$clave);
+    $empleado=Empleado::ValidarEmpleado($usuario,$clave);
+    var_dump($empleado);
     $sesion= new Sesion();
     $sesion->idEmpleado=$empleado->id;
     $sesion->horaInicio= date('Y/m/d G:i,s');

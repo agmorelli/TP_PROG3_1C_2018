@@ -33,7 +33,7 @@ class Sesion
                  return true;
              }
              else{
-                 throw new Exception("No se pudo cerrar la sesion.");
+                 throw new Exception("No se pudo cerrar la sesion!!!");
              }
     }
 
