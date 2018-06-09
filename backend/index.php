@@ -6,6 +6,7 @@ use \Psr\Http\Message\ResponseInterface as Response;
 require './composer/vendor/autoload.php';
 require_once './clases/AccesoDatos.php';
 require_once './clases/EmpleadoApi.php';
+require_once './clases/PedidoApi.php';
 require_once './clases/SesionApi.php';
 require_once './clases/AutentificadorJWT.php';
 require_once './clases/MWparaCORS.php';
@@ -54,6 +55,12 @@ $app->group('/Empleados', function () {
   $this->get('/Operaciones/{id}', \EmpleadoApi::class . ':CantidadDeOperaciones');
 })->add(\MWparaAutentificar::class . ':VerificarUsuario')->add(\MWparaCORS::class . ':HabilitarCORS8080')->add(\MWparaCORS::class . ':HabilitarCORSTodos');
 
+
+$app->group('/Pedidos', function(){
+  $this->post('/',\PedidoApi::class . ':IngresarPedido');
+  //$this->put('/Salir', \SesionApi::class . ':CerrarSesion');
+
+});
 
 
 

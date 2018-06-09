@@ -51,6 +51,7 @@ public static function CerrarSesion($request, $response)
 
         $idSesion=$payload->idSesion;
         $fechaFinal=date('Y/m/d G:i,s');
+        
         $ok=Sesion::CerrarSesion($idSesion, $fechaFinal);
         
 
