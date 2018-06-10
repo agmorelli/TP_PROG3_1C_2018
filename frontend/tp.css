@@ -1,0 +1,53 @@
+body{
+    
+    font:white;
+    
+    background-image: url("imagenes/beer-820011_1920.JPG");
+    background-position: center center;
+    background-repeat: no-repeat;
+
+/* La imagen se fija en la ventana de visualización para que la altura de la imagen no supere a la del contenido */
+
+background-attachment: fixed;
+
+/* La imagen de fondo se reescala automáticamente con el cambio del ancho de ventana del navegador */
+
+background-size: cover;
+
+}
+
+
+h4{
+    color: white;
+    
+}
+#spinner{
+    z-index: 4;
+    position: absolute;
+    margin-left: 25%;
+    margin-top: 10%;
+    
+}
+
+table {
+    color: white;
+}
+.table-light{
+    font: white;
+}
+
+.label-blanco{
+    color: white;
+}
+.fotoEmpleado{
+    height: 45px;
+    width: 45px;
+    border-radius: 50%;
+}
+#infoOperacion{
+    margin-right: 10%;
+    margin-top: 5%;
+    border: 1 , white;
+    color: white;
+}
+

@@ -136,7 +136,7 @@ class EmpleadoApi extends Empleado implements IApiUsable
          $id=$ArrayDeParametros['id'];
          $estado=$ArrayDeParametros['estado'];   	
  
-       $resultado= Empleado::Suspender($id,$estado);
+       $resultado= Empleado::SuspenderEmpleado($id,$estado);
         
 	   	$objDelaRespuesta= new stdclass();
 		//var_dump($resultado);
@@ -148,7 +148,7 @@ class EmpleadoApi extends Empleado implements IApiUsable
     public static function CantidadDeOperaciones($request, $response, $args)
     {
         $id=$args['id'];
-        $operaciones=Empleado::CantidadDeOperaciones($id);
+        $operaciones=Empleado::CantidadDeOperacionesEmp($id);
         return $response->withJson($operaciones, 200);
     }
 

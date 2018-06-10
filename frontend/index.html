@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+            <meta charset="utf-8">
+
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+<!-- Latest compiled and minified CSS -->
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+<!-- Optional theme -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+
+
+<script src="tp.js"></script>
+
+<link rel="stylesheet" href="tp.css">
+
+</head>
+
+<body>
+        <div class="container">
+            <header>  
+    
+    <div class="form-row align-items-center" id="login">
+      <div id="formLogin">
+    <form action="" class="form-inline">  
+     <input placeholder="usuario" type="text" class="form-control" id="usuario"><br>
+     <input placeholder="clave" type="password" class="form-control" id="clave"><br>
+     <input type="button" class="btn-primary" id="logear" value="Login" onclick="loguear()">  
+     <br><div id="error"></div>
+    </form>
+    </div>
+     </div>  
+     <br>
+</header>
+<nav class="nav-tabs">
+<ul class="nav nav-tabs" id="myTab" role="tablist">
+  <li class="nav-item">
+    <a class="nav-link active" id="Empleados-tab" data-toggle="tab" href="#Empleados" role="tab" aria-controls="Empleados" aria-selected="true">Empleados</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" id="Pedidos-tab" data-toggle="tab" href="#Pedidos" role="tab" aria-controls="Pedidos" aria-selected="false">Pedidos</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" id="Mesas-tab" data-toggle="tab" href="#Mesas" role="tab" aria-controls="Mesas" aria-selected="false">Mesas</a>
+  </li>    <li class="nav-item">
+    <a class="nav-link" id="Pendientes-tab" data-toggle="tab" href="#Pendientes" role="tab" aria-controls="Pendientes" aria-selected="false">Pendientes</a>
+  </li>
+</ul>
+</nav>
+
+
+<div id="spinner"></div>      <!---SPINNER-->
+
+<div class="tab-content" id="myTabContent">
+  <div class="tab-pane fade " id="Empleados" role="tabpanel" aria-labelledby="Empleados-tab">
+<div class="col-lg-4 col-md-4">
+<form class="form-inline" action="">
+<fieldset>
+<legend><h4>  Ingresar nuevo empleado  </h4>  </legend>
+<div class=" form-group form-row align-items-center">
+  <label class="label-blanco" for="txtUsuario" >Usuario</label><br>
+  <input type="text" id="txtUsuario" placeholder="Usuario" class="form-control" ><br>
+
+  <label class="label-blanco" for="txtClave" >Clave</label><br>
+  <input type="text" id="txtClave"placeholder="Clave" class="form-control"><br>
+
+  <label class="label-blanco" for="txtSector" >Sector</label><br>
+  <input type="text" id="txtSector" placeholder="Sector" class="form-control"><br>
+
+  <label class="label-blanco" for="txtPerfil" >Perfil</label><br>
+  <input type="text" id="txtPerfil" placeholder="Perfil" class="form-control"><br>
+
+
+  <input type="hidden" id="idEmpleado" value="">
+  <input type="button" value="Guardar" class="btn btn-primary" onclick="GuardarEmpleado()">
+</div>
+</fieldset>
+</form>
+</div>
+
+<br><br> 
+<div class="col-md-6 col-lg-6">
+<button value="Tabla Empleados" class="btn-primary" onclick="TraerEmpleados()">Tabla Empleados</button>
+  <div id="tabla"></div>    
+</div>
+  </div>                                       <!--Pedidos-->
+
+  <div class="tab-pane fade" id="Pedidos" role="tabpanel" aria-labelledby="Pedidos-tab">
+      <div id="formAuto" class="col-lg-4 col-md-4">
+              <form class="form-inline" action="">
+        <fieldset>
+
+          <legend><h4>Ingreso Pedido</h4></legend>
+          <div class=" form-group form-row align-items-center">
+              <label class="label-blanco" for="txtMesa" >Mesa</label><br>
+              <input type="text" id="txtMesa" placeholder="Mesa" class="form-control">
+              <br>
+              <label class="label-blanco" for="txtPedido" >Pedido</label><br>
+              <input type="text" id="txtPedido" placeholder="Pedido" class="form-control">
+              <label class="label-blanco" for="txtFoto" >Foto</label><br>
+              <input type="file" id="foto"><br>
+  
+              <br>
+              <button type="button" onclick="IngresarPedido()" class="btn btn-primary">Ingresar</button>
+
+          </div>  
+        </fieldset>
+        </form>
+      </div>
+  </div>
+
+
+
+
+  <div class="tab-pane fade" id="Mesas" role="tabpanel" aria-labelledby="Mesas-tab">
+
+
+
+<div id="tablaMesas"></div>
+<button type="button" onclick="MesaSinUso()" class="btn btn-primary">Sin usar</button>
+<div id="infoMesa"></div>
+
+  </div>
+
+    <div class="tab-pane fade" id="Pendientes" role="tabpanel" aria-labelledby="Pendientes-tab">
+
+<button class="btn btn-primary" value="Listado de Pendientes" onclick="ListaPendientes()">Lista de Pendientes</button>
+<div id="tablaPendientes"></div>
+
+  </div>
+</div>
+
+
+        </div>
+        
+</body>
+    
+</html>
+

@@ -132,7 +132,7 @@ class Empleado
 	}
 
 
-		  public static function Suspender($id, $estado)
+		  public static function SuspenderEmpleado($id, $estado)
 	 {
 		 
 		 if($estado=="activo")
@@ -157,7 +157,7 @@ class Empleado
 
 	 }
 
-public static function CantidadDeOperaciones($id)
+public static function CantidadDeOperacionesEmp($id)
 {
 			$objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
 			$consulta =$objetoAccesoDato->RetornarConsulta("SELECT * FROM operaciones WHERE idEmpleado=:id");
