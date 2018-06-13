@@ -1,5 +1,6 @@
 <?php
 include_once "Pedido.php";
+include_once "Detalle.php";
 include_once "AutentificadorJWT.php";
 
 class PedidoApi {
@@ -38,14 +39,30 @@ class PedidoApi {
 
             $nuevoPedido= new Pedido();
             $nuevoPedido->idMesa=$idMesa;
-            $nuevoPedido->pedido=$pedido;
             $nuevoPedido->tiempoInicio=$tiempoInicio;
-            $nuevoPedido->fotoMesa=$ultimoDestinoFoto;
+            $nuevoPedido->fotoMesa=$ultimoDestinoFoto;   
+           $idPedido=$nuevoPedido->GuardarPedido();
+
+           $arrayDetalle=explode(",",$pedido);
            
-           $nuevoPedido->GuardarPedido();
+
+           foreach ($arrayDetalle as $producto)
+           {
+
+            $detallePedido=new Detalle();
+            $detallePedido->idPedido=$idPedido;
+            $detallePedido->producto=$producto;
+            $detallePedido->estado="pendiente";
+            $detallePedido->GuardarDetalle();
+            var_dump($detallePedido);
+
+           }
+          
+           
 
 
-        $objDelaRespuesta->respuesta="Pedido Guardado en id: ". $pedido->id;
+
+        $objDelaRespuesta->idPedido= $idPedido;
            
         return $response->withJson($objDelaRespuesta, 200);
         

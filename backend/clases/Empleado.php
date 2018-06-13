@@ -41,7 +41,7 @@ class Empleado
   
 	 public function InsertarEmpleado()
 	 {
-		 $this->estado="activo";
+		 
 		$objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
 		$consulta =$objetoAccesoDato->RetornarConsulta("INSERT into empleados (usuario, clave, sector, perfil, estado) VALUES(:usuario, :clave, :sector, :perfil, :estado)");
 

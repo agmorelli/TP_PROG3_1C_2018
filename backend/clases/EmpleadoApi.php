@@ -40,12 +40,14 @@ class EmpleadoApi extends Empleado implements IApiUsable
           $sector= $ArrayDeParametros['sector'];
         $clave= $ArrayDeParametros['clave'];
         $perfil= $ArrayDeParametros['perfil'];
+        $estado= "Activo";
 
         $miEmpleado= new Empleado();
         $miEmpleado->usuario=$usuario;
         $miEmpleado->clave=$clave;
         $miEmpleado->sector=$sector;
         $miEmpleado->perfil=$perfil;
+        $miEmpleado->estado=$estado;
 
         $ultimoId=$miEmpleado->InsertarEmpleado();    
         //$response->getBody()->write("se guardo el empleado");

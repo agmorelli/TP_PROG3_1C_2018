@@ -80,15 +80,8 @@ function AjaxPut(direccion, objJson, funcion)
 		/*headers: {
                 'Content-type': 'application/x-www-form-urlencoded'
             }*/
-	}).then(function(respuesta){
-Spinner();
-funcion;
-		
+	}).then(funcion,function(error){
 
-	},function(error){
-
-			//lugarSpinner.style.display="none";
-			//lugarError.innerHTML= "error";
 			console.info("estamos en error", error);
             
 
@@ -180,7 +173,7 @@ var tabla="<table class='table  table-light'>"+
 
 					 tabla = tabla + "<tr>"+
 						"<td>"+ respuesta[i].id +"</td>"+"<td>" + respuesta[i].usuario +"</td><td>" + respuesta[i].sector +"</td><td>" + respuesta[i].estado +"</td>"+
-							  "<td> <button onclick=SuspenderEmpleado("+ respuesta[i].id +",'"    +  respuesta[i].estado   +  "') value=Suspender class='btn btn-warning'>Suspender</button></td><td><button class='btn btn-danger' onclick=Eliminar("+ respuesta[i].id +") value=Eliminar>Eliminar</button></td><td><button class='btn btn-danger' onclick=Modificar("+ JSON.stringify(respuesta[i]) +") value=Modificar>Modificar</button></td></tr>";
+							  "<td> <button onclick=SuspenderEmpleado("+ respuesta[i].id +",'"    +  respuesta[i].estado   +  "') value=Suspender class='btn btn-warning'>Suspender</button></td><td><button class='btn btn-danger' onclick=Eliminar("+ respuesta[i].id +") value=Eliminar>Eliminar</button></td><td><button class='btn btn-danger' onclick=ModificarEmpleado("+ JSON.stringify(respuesta[i]) +") value=Modificar>Modificar</button></td></tr>";
 
 		});
 		tabla=tabla+ "</tbody></table>"
@@ -231,5 +224,110 @@ function CerrarCesion()
 
 	});
 }
+
+function Suspender(id)
+{
+
+}
+
+
+function ModificarEmpleado(empleado)
+{
+	
+	document.getElementById("txtUsuario").value=empleado.usuario;
+	document.getElementById("txtSector").value=empleado.sector;
+	document.getElementById("txtPerfil").value=empleado.perfil;
+	document.getElementById("txtClave").value=empleado.clave;
+	document.getElementById("idEmpleado").value=empleado.id;	
+
+}
+
+
+
+function GuardarEmpleado()
+{
+	var usuario=document.getElementById('txtUsuario').value;
+	var sector=document.getElementById('txtSector').value;
+	var perfil=document.getElementById('txtPerfil').value;
+	var clave=document.getElementById('txtClave').value;
+	var idEmpleado=document.getElementById("idEmpleado").value;
+    var token= TraerToken();
+
+	var datosDelForm=new FormData("formEmpleado");
+	datosDelForm.append("usuario",usuario);
+	datosDelForm.append("sector",sector);
+	datosDelForm.append("perfil",perfil);
+	datosDelForm.append("clave",clave);
+	datosDelForm.append("id",idEmpleado);
+	datosDelForm.append("token",token);
+	
+
+	if(idEmpleado=="")
+	{
+
+	  var funcionAjax=$.ajax({
+		url:"http://localhost:8080/TP_PROG3_1C_2018/backend/Empleados/",
+		type:"post",
+		data:datosDelForm,
+		cache: false, //no se borra es para subir archivos
+    	contentType: false,//no se borra es para subir archivos
+    	processData: false,//no se borra es para subir archivos
+		/*		headers: {
+                'Content-type': 'application/x-www-form-urlencoded'
+				}*/
+	}).then(function(respuesta){
+		TraerEmpleados();
+
+		console.log(respuesta);
+		
+
+	},function(error){
+
+			//lugarSpinner.style.display="none";
+			//lugarError.innerHTML= "error";
+			console.info("estamos en error", error);
+            
+
+	});
+	
+}
+else{
+
+	 var funcionAjax=$.ajax({
+		url:"http://localhost:8080/TP_PROG3_1C_2018/backend/Empleados/ModificarEmpleado",
+		type:"post",
+		data:datosDelForm,
+		cache: false, //no se borra es para subir archivos
+    	contentType: false,//no se borra es para subir archivos
+    	processData: false,//no se borra es para subir archivos
+		/*headers: {
+                'Content-type': 'application/x-www-form-urlencoded'
+            }*/
+	}).then(function(respuesta){
+
+console.log(respuesta);
+
+	},function(error){
+
+	console.info("estamos en error", error);   
+
+	});
+
+Spinner();
+}
+
+TraerEmpleados();
+document.getElementById('txtUsuario').value="";
+document.getElementById('txtSector').value="";;
+document.getElementById('txtPerfil').value="";;
+document.getElementById('txtClave').value="";;
+
+document.getElementById('idEmpleado').value="";
+
+}
+
+
+
+
 
          
