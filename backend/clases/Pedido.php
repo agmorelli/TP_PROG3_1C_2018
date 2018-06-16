@@ -34,9 +34,10 @@ public static function TraerTodosLosPedidos()
 			$pedidos= $consulta->fetchAll(PDO::FETCH_CLASS, "Pedido");
             
             return $pedidos;
-							
-			
+									
 }
+
+
 
 
 

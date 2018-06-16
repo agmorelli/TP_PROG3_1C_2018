@@ -12,8 +12,6 @@ if(localStorage.getItem('mitoken') !== null )
 }
 
 TraerEmpleados();
-
-
 	
 }
 
@@ -290,8 +288,9 @@ function GuardarEmpleado()
 
 	});
 	
-}
-else{
+	}
+	else
+	{
 
 	 var funcionAjax=$.ajax({
 		url:"http://localhost:8080/TP_PROG3_1C_2018/backend/Empleados/ModificarEmpleado",
@@ -305,7 +304,7 @@ else{
             }*/
 	}).then(function(respuesta){
 
-console.log(respuesta);
+	console.log(respuesta);
 
 	},function(error){
 
@@ -313,16 +312,15 @@ console.log(respuesta);
 
 	});
 
-Spinner();
-}
+		Spinner();
+	}
 
-TraerEmpleados();
-document.getElementById('txtUsuario').value="";
-document.getElementById('txtSector').value="";;
-document.getElementById('txtPerfil').value="";;
-document.getElementById('txtClave').value="";;
-
-document.getElementById('idEmpleado').value="";
+		TraerEmpleados();
+		document.getElementById('txtUsuario').value="";
+		document.getElementById('txtSector').value="";;
+		document.getElementById('txtPerfil').value="";;
+		document.getElementById('txtClave').value="";;
+		document.getElementById('idEmpleado').value="";
 
 }
 

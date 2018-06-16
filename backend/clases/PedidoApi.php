@@ -5,7 +5,8 @@ include_once "AutentificadorJWT.php";
 
 class PedidoApi {
 
-      public static function IngresarPedido($request, $response, $args) {
+public static function IngresarPedido($request, $response, $args) 
+{
      	
         $objDelaRespuesta= new stdclass();
         
@@ -14,7 +15,6 @@ class PedidoApi {
      //  $payload=AutentificadorJWT::ObtenerData($token);
       
         $idMesa= $ArrayDeParametros['idMesa'];
-
         $pedido= $ArrayDeParametros['pedido'];
         $tiempoInicio= date('Y/m/d G:i,s');
 
@@ -53,41 +53,47 @@ class PedidoApi {
             $detallePedido->idPedido=$idPedido;
             $detallePedido->producto=$producto;
             $detallePedido->estado="pendiente";
+            
+                if ($producto=='trago'|| $producto=='vino'){
+                    $detallePedido->sector="barra";
+                }
+                if($producto=='pizza'|| $producto=='empanadas' || $producto=='plato')
+                {
+                    $detallePedido->sector="cocina";
+                }
+                if($producto=='cerveza')
+                {
+                    $detallePedido->sector="chopera";
+                }
+                if($producto=='postre')
+                {
+                    $detallePedido->sector="candy bar";
+                }
+        
             $detallePedido->GuardarDetalle();
-            var_dump($detallePedido);
 
            }
-          
-           
-
-
 
         $objDelaRespuesta->idPedido= $idPedido;
            
         return $response->withJson($objDelaRespuesta, 200);
         
-    }
+}
 
-/*
-
-public static function SacarAuto($request, $response, $args)
+public static function TraerPendientesEmpleado($request, $response, $args)
 {
     $objDelaRespuesta=new stdclass();
     $ArrayDeParametros = $request->getParsedBody();
-    $patente=$ArrayDeParametros['patente']; 
-    
+    $token=$ArrayDeParametros['token'];
+    $payload=AutentificadorJWT::ObtenerData($token);
+    $idEmpleado=$payload->idEmpleado;
+   $objDelaRespuesta=Detalle::TraerPendientes($idEmpleado);
 
-   $importe= Operacion::CerrarOperacion($patente);
-    $auto=Auto::TraerUnAuto($patente);
-    
-
-    $objDelaRespuesta->auto=$auto;
-    $objDelaRespuesta->importe=$importe;
     return $response->withJson($objDelaRespuesta, 200);
 
 }
 
-
+/*
 public static function TraerTodos($request, $response, $args)
 {
     $respuesta=new stdclass();

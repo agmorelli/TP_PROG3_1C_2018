@@ -57,7 +57,8 @@ $app->group('/Empleados', function () {
 
 
 $app->group('/Pedidos', function(){
-  $this->post('/',\PedidoApi::class . ':IngresarPedido');
+  $this->post('/',\PedidoApi::class . ':IngresarPedido'); 
+  $this->post('/PendientesEmpleado',\PedidoApi::class . ':TraerPendientesEmpleado');
   //$this->put('/Salir', \SesionApi::class . ':CerrarSesion');
 
 });
