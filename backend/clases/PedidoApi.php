@@ -109,23 +109,28 @@ public static function PrepararPedido($request, $response, $args)
    $miDetalle->tiempoPreparacion=$tiempoPreparacion;
    $miDetalle->idEmpleado=$idEmpleado;
    $miDetalle->estado="en preparacion";
-   $miDetalle->PrepararDetalle();
+   $respuesta=$miDetalle->PrepararDetalle();
 
-   var_dump($miDetalle);
+   
     return $response->withJson($respuesta,200);
 
 }
-/*
-public static function CalcularCosto($request, $response, $args)
+
+public static function ServirPedido($request, $response, $args)
 {
-        $objDelaRespuesta=new stdclass();
+    $respuesta=new stdclass();
     $ArrayDeParametros = $request->getParsedBody();
-    $patente=$ArrayDeParametros["patente"];
-    $operacion=Operacion::TraerUnaOperacionAbierta($patente);
-    $respuesta=$operacion->CalcularCosto();
+    $idDetalle=$ArrayDeParametros['idDetalle'];
+    $tiempoServido=date('Y/m/d G:i,s');
+    $miDetalle=new Detalle();
+    $miDetalle->idDetalle=$idDetalle;
+   $miDetalle->tiempoServido=$tiempoServido;
+   $respuesta=$miDetalle->ServirDetalle();
+
+   
     return $response->withJson($respuesta,200);
 
-}*/
+}
 }
 
 ?>

@@ -7,6 +7,7 @@ public $idDetalle;
 public $idPedido;
 public $producto;
 public $tiempoPreparacion;
+public $tiempoServido;
 public $idEmpleado;
 public $estado;
 public $sector;
@@ -90,6 +91,17 @@ public function PrepararDetalle()
         $consulta->bindValue(':tiempoPreparacion',$this->tiempoPreparacion, PDO::PARAM_STR);
         $consulta->bindValue(':idEmpleado',$this->idEmpleado, PDO::PARAM_INT);
         $consulta->bindValue(':estado',$this->estado, PDO::PARAM_STR);
+        $consulta->bindValue(':id',$this->idDetalle, PDO::PARAM_INT);
+       return $consulta->execute();
+
+}
+
+public function ServirDetalle()
+{
+    $objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
+        $consulta =$objetoAccesoDato->RetornarConsulta("update pedidodetalle set tiempoServido=:tiempoServido, estado=:estado WHERE idDetalle=:id");
+        $consulta->bindValue(':tiempoServido',$this->tiempoServido, PDO::PARAM_STR);
+        $consulta->bindValue(':estado',"listo para servir", PDO::PARAM_STR);
         $consulta->bindValue(':id',$this->idDetalle, PDO::PARAM_INT);
        return $consulta->execute();
 
