@@ -87,23 +87,35 @@ public static function TraerPendientesEmpleado($request, $response, $args)
     $token=$ArrayDeParametros['token'];
     $payload=AutentificadorJWT::ObtenerData($token);
     $idEmpleado=$payload->idEmpleado;
+    
    $objDelaRespuesta=Detalle::TraerPendientes($idEmpleado);
 
     return $response->withJson($objDelaRespuesta, 200);
 
 }
 
-/*
-public static function TraerTodos($request, $response, $args)
+
+public static function PrepararPedido($request, $response, $args)
 {
     $respuesta=new stdclass();
+    $ArrayDeParametros = $request->getParsedBody();
+    $token=$ArrayDeParametros['token'];
+    $payload=AutentificadorJWT::ObtenerData($token);
+    $idEmpleado=$payload->idEmpleado;
+    $idDetalle=$ArrayDeParametros['idDetalle'];
+    $tiempoPreparacion=$ArrayDeParametros['tiempoPreparacion'];
+    $miDetalle=new Detalle();
+    $miDetalle->idDetalle=$idDetalle;
+   $miDetalle->tiempoPreparacion=$tiempoPreparacion;
+   $miDetalle->idEmpleado=$idEmpleado;
+   $miDetalle->estado="en preparacion";
+   $miDetalle->PrepararDetalle();
 
-    $respuesta=Operacion::TraerTodasLasOperaciones();
-
+   var_dump($miDetalle);
     return $response->withJson($respuesta,200);
 
 }
-
+/*
 public static function CalcularCosto($request, $response, $args)
 {
         $objDelaRespuesta=new stdclass();
