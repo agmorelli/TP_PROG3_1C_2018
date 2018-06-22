@@ -107,6 +107,16 @@ public function ServirDetalle()
 
 }
 
+public static function TiempoRestante($idMesa, $idPedido)
+{
+    $objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
+    $consulta =$objetoAccesoDato->RetornarConsulta("SELECT tiempoPreparacion from pedidodetalle WHERE idpedido=$idPedido");  
+    $consulta->execute();
+
+    return $consulta->fetch();
+   
+}
+
 
 
 

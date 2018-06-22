@@ -85,7 +85,8 @@ class EmpleadoApi extends Empleado implements IApiUsable
 
 
      
-     public function ModificarUno($request, $response, $args) {
+     public function ModificarUno($request, $response, $args) 
+     {
      	
      	$ArrayDeParametros = $request->getParsedBody(); 
         $objDelaRespuesta= new stdclass();
@@ -132,20 +133,21 @@ class EmpleadoApi extends Empleado implements IApiUsable
 }
 
 
-         public static function Suspender($request, $response, $args) {
+         public static function Suspender($request, $response, $args) 
+         {
      	
-     	$ArrayDeParametros = $request->getParsedBody(); 
+     	 $ArrayDeParametros = $request->getParsedBody(); 
          $id=$ArrayDeParametros['id'];
          $estado=$ArrayDeParametros['estado'];   	
  
-       $resultado= Empleado::SuspenderEmpleado($id,$estado);
+         $resultado= Empleado::SuspenderEmpleado($id,$estado);
         
-	   	$objDelaRespuesta= new stdclass();
-		//var_dump($resultado);
-		$objDelaRespuesta->resultado=$resultado;
-        $objDelaRespuesta->tarea="Suspender";
-		return $response->withJson($objDelaRespuesta, 200);		
-    }
+	   	 $objDelaRespuesta= new stdclass();
+		 //var_dump($resultado);
+		 $objDelaRespuesta->resultado=$resultado;
+         $objDelaRespuesta->tarea="Suspender";
+		 return $response->withJson($objDelaRespuesta, 200);		
+         }
 
     public static function CantidadDeOperaciones($request, $response, $args)
     {

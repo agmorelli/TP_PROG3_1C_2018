@@ -64,6 +64,22 @@ function AjaxPost(direccion, objJson, funcion)//////////////////////////       A
 	});
 }
 
+function AjaxDelete(direccion, objJson, funcion)//////////////////////////       AjaxPost     ////////////////////////////////////////////////////////
+{
+	Spinner();
+	var funcionAjax=$.ajax({
+		url:direccion,
+		type:"delete",
+		data:objJson
+	}).then(funcion,function(error){
+		
+		Spinner();
+			console.info("error", error);
+            
+
+	});
+}
+
 
 function AjaxPut(direccion, objJson, funcion)
 {
@@ -171,7 +187,7 @@ var tabla="<table class='table  table-light'>"+
 
 					 tabla = tabla + "<tr>"+
 						"<td>"+ respuesta[i].id +"</td>"+"<td>" + respuesta[i].usuario +"</td><td>" + respuesta[i].sector +"</td><td>" + respuesta[i].estado +"</td>"+
-							  "<td> <button onclick=SuspenderEmpleado("+ respuesta[i].id +",'"    +  respuesta[i].estado   +  "') value=Suspender class='btn btn-warning'>Suspender</button></td><td><button class='btn btn-danger' onclick=Eliminar("+ respuesta[i].id +") value=Eliminar>Eliminar</button></td><td><button class='btn btn-danger' onclick=ModificarEmpleado("+ JSON.stringify(respuesta[i]) +") value=Modificar>Modificar</button></td></tr>";
+							  "<td> <button onclick=SuspenderEmpleado("+ respuesta[i].id +",'"    +  respuesta[i].estado   +  "') value=Suspender class='btn btn-warning'>Suspender</button></td><td><button class='btn btn-danger' onclick=EliminarEmpleado("+ respuesta[i].id +") value=Eliminar>Eliminar</button></td><td><button class='btn btn-danger' onclick=ModificarEmpleado("+ JSON.stringify(respuesta[i]) +") value=Modificar>Modificar</button></td></tr>";
 
 		});
 		tabla=tabla+ "</tbody></table>"
@@ -223,8 +239,34 @@ function CerrarCesion()
 	});
 }
 
-function Suspender(id)
+function SuspenderEmpleado(id,estado)
 {
+	let token=TraerToken();
+	var objJson={
+		"token": token,
+		"estado": estado,
+		"id":id
+	}
+	AjaxPut("http://localhost:8080/TP_PROG3_1C_2018/backend/Empleados/Suspender",objJson,function(respuesta){
+	
+	console.log(respuesta);
+	});
+	TraerEmpleados();
+	Spinner();
+}
+
+function EliminarEmpleado(id)
+{
+	let objJson =
+	{
+		"token": TraerToken(),
+		"id": id,
+	}
+
+	AjaxDelete("http://localhost:8080/TP_PROG3_1C_2018/backend/Empleados/",objJson, function(respuesta){
+
+		TraerEmpleados();
+	});
 
 }
 

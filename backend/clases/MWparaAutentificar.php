@@ -27,31 +27,15 @@ class MWparaAutentificar
 	   
 		if($request->isGet())
 		{
-		// $response->getBody()->write('<p>NO necesita credenciales para los get </p>');
+		
 		 $response = $next($request, $response);
 		}
 		else
 		{
-			//$response->getBody()->write('<p>verifico credenciales</p>');
-
-			//perfil=Profesor (GET, POST)
-			//$datos = array('usuario' => 'rogelio@agua.com','perfil' => 'profe', 'alias' => "PinkBoy");
 			
-			//perfil=Administrador(todos)
-			//$datos = array('usuario' => 'rogelio@agua.com','perfil' => 'Administrador', 'alias' => "PinkBoy");
-			
-			//$token= AutentificadorJWT::CrearToken($datos);
-
-			//tomo el token del header
-			/*
-				$arrayConToken = $request->getHeader('token');
-				$token=$arrayConToken[0];			
-			*/
-			//var_dump($token);
-			//$objDelaRespuesta->esValido=true; 
 			try 
 			{
-				//$token="";
+				
 				AutentificadorJWT::verificarToken($token);
 				$objDelaRespuesta->esValido=true;      
 			}
@@ -71,6 +55,7 @@ class MWparaAutentificar
 				else
 				{
 					$payload=AutentificadorJWT::ObtenerData($token);
+					var_dump($payload->perfil);
 					//var_dump($payload);
 					// DELETE,PUT y DELETE sirve para todos los logeados y admin
 					if($payload->perfil=="admin")

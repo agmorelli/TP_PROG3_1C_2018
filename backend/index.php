@@ -50,6 +50,8 @@ $app->group('/Pedidos', function(){
   $this->post('/PendientesEmpleado',\PedidoApi::class . ':TraerPendientesEmpleado');
   $this->post('/PrepararPedido',\PedidoApi::class . ':PrepararPedido');
   $this->post('/ServirPedido',\PedidoApi::class . ':ServirPedido');
+  $this->post('/TiempoRestante',\PedidoApi::class . ':TiempoRestante');
+  
 
 
 });

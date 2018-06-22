@@ -131,6 +131,18 @@ public static function ServirPedido($request, $response, $args)
     return $response->withJson($respuesta,200);
 
 }
+
+public static function TiempoRestante($request, $response, $args)
+{
+    $respuesta=new stdclass();
+    $ArrayDeParametros = $request->getParsedBody();
+    $idMesa=$ArrayDeParametros['idMesa'];
+    $idPedido=$ArrayDeParametros['idPedido'];
+    $respuesta=Detalle::TiempoRestante($idMesa, $idPedido);
+
+   
+    return $response->withJson($respuesta,200);
+}
 }
 
 ?>
