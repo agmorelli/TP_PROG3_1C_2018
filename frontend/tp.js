@@ -1,6 +1,7 @@
 
                           ////////////////////////////LOGUEAR////////////////////////////////////
-window.onload=function(){
+window.onload=function()
+{
 
 var seccionLogin=document.getElementById('login');
 
@@ -43,6 +44,7 @@ Spinner();
             
 
 	});
+	
 }
 
 function AjaxPost(direccion, objJson, funcion)//////////////////////////       AjaxPost     ////////////////////////////////////////////////////////
@@ -64,7 +66,7 @@ function AjaxPost(direccion, objJson, funcion)//////////////////////////       A
 	});
 }
 
-function AjaxDelete(direccion, objJson, funcion)//////////////////////////       AjaxPost     ////////////////////////////////////////////////////////
+function AjaxDelete(direccion, objJson, funcion)//////////////////////////       AjaxDelete     ////////////////////////////////////////////////////////
 {
 	Spinner();
 	var funcionAjax=$.ajax({
@@ -170,7 +172,7 @@ objJson=
 
 
 
-    }
+}
 
 
                                  ///////////////////////TraerEmpleados///////////////////////////////
@@ -363,6 +365,129 @@ function GuardarEmpleado()
 		document.getElementById('txtPerfil').value="";;
 		document.getElementById('txtClave').value="";;
 		document.getElementById('idEmpleado').value="";
+
+}
+
+function AgregarProducto(producto)
+{
+	var listProd = document.getElementById('listaProductos').value;
+	listProd= listProd + producto + ",";
+	document.getElementById('listaProductos').value=listProd;
+
+	AjaxGet("http://localhost:8080/TP_PROG3_1C_2018/backend/Productos/"+producto,function(respuesta){
+		
+		var tabla=document.getElementById('tabProductos').innerHTML;
+		
+		tabla=tabla+"<tr><td>"+respuesta.nombre+"</td><td>"+respuesta.precio+"</td></tr>";
+		document.getElementById('tabProductos').innerHTML=tabla;
+		Spinner();
+	
+
+
+	});
+
+	
+}
+
+function IngresarPedido()
+{
+
+	var idMesa=document.getElementById('txtMesa').value;
+	var pedido=document.getElementById('listaProductos').value;
+	console.info(pedido);
+	var inputFileImage = document.getElementById("foto");
+	var foto = inputFileImage.files[0];
+    var token= TraerToken();
+	var datosDelForm=new FormData("formPedido");
+	datosDelForm.append("token",token);
+	datosDelForm.append("idMesa",idMesa);
+	datosDelForm.append("pedido", pedido);
+	datosDelForm.append("foto",foto);
+
+	var funcionAjax=$.ajax({
+		url:"http://localhost:8080/TP_PROG3_1C_2018/backend/Pedidos/",
+		type:"post",
+		data:datosDelForm,
+		cache: false, //no se borra es para subir archivos
+    	contentType: false,//no se borra es para subir archivos
+    	processData: false,//no se borra es para subir archivos
+		/*		headers: {
+                'Content-type': 'application/x-www-form-urlencoded'
+}*/
+	}).then(function(respuesta){
+
+		console.log(respuesta);
+		document.getElementById('idPedido').innerHTML="<h1>"+respuesta.idPedido+" </h1>" ;
+		
+
+	},function(error){
+
+			//lugarSpinner.style.display="none";
+			//lugarError.innerHTML= "error";
+			console.info("estamos en error", error);
+            
+
+	});
+	document.getElementById('txtMesa').value="";
+	document.getElementById('listaProductos').value="";
+	document.getElementById('tabProductos').innerHTML="";
+}
+
+function ListaPendientes()
+{
+	document.getElementById('tablaPendientes').innerHTML="";
+	var tabla =document.getElementById('tablaPendientes').innerHTML;
+	var objJson={
+		"token": TraerToken()
+	}
+	var tabla;
+
+	AjaxPost("http://localhost:8080/TP_PROG3_1C_2018/backend/Pedidos/PendientesEmpleado",objJson,function(respuesta){
+
+	respuesta.map(function(detalle, i){
+		
+		tabla=tabla + "<tr><td>"+detalle.idDetalle+"</td><td>"+detalle.idPedido+"</td><td>"+detalle.producto+"</td><td>"+detalle.estado+"</td><td>"+detalle.sector+
+		"</td><td> <button class='btn btn-primary' onclick='PrepararPedido("+detalle.idDetalle+")'>Preparar </button> </td><td><input type='time' id='tiempoPreparacion'></td>"+
+		"<td><button class='btn btn-primary' onclick='ServirPedido("+detalle.idDetalle+")'>Servir</button></td></tr>";
+
+
+	});
+	document.getElementById('tablaPendientes').innerHTML=tabla;
+	});
+	
+	document.getElementById('tablaPendientes').innerHTML=tabla;
+	Spinner();
+}
+
+function PrepararPedido(indice)
+{
+	var tiempo=document.getElementById('tiempoPreparacion').value;
+	var objJson={
+		"token": TraerToken(),
+		"idDetalle":indice,
+		"tiempoPreparacion": tiempo
+	}
+	AjaxPost("http://localhost:8080/TP_PROG3_1C_2018/backend/Pedidos/PrepararPedido",objJson,function(respuesta){
+		console.log(respuesta);
+
+	});
+	Spinner();
+	ListaPendientes();
+
+}
+
+function ServirPedido(indice)
+{
+	var objJson={
+		"token": TraerToken(),
+		"idDetalle":indice
+	}
+	AjaxPost("http://localhost:8080/TP_PROG3_1C_2018/backend/Pedidos/ServirPedido",objJson,function(respuesta){
+		console.log(respuesta);
+
+	});
+	Spinner();
+	ListaPendientes();
 
 }
 

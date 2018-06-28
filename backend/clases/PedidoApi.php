@@ -1,6 +1,7 @@
 <?php
 include_once "Pedido.php";
 include_once "Detalle.php";
+include_once "Mesa.php";
 include_once "AutentificadorJWT.php";
 
 class PedidoApi {
@@ -17,6 +18,10 @@ public static function IngresarPedido($request, $response, $args)
         $idMesa= $ArrayDeParametros['idMesa'];
         $pedido= $ArrayDeParametros['pedido'];
         $tiempoInicio= date('Y/m/d G:i,s');
+        $laMesa=Mesa::TraerUnaMesa($idMesa);
+        $laMesa->estado="con cliente esperando pedido";
+        $laMesa->canUsos++;
+        $laMesa->ModificarMesa();
 
         $archivos = $request->getUploadedFiles();
         $destino="./fotos/";
@@ -41,36 +46,38 @@ public static function IngresarPedido($request, $response, $args)
             $nuevoPedido->idMesa=$idMesa;
             $nuevoPedido->tiempoInicio=$tiempoInicio;
             $nuevoPedido->fotoMesa=$ultimoDestinoFoto;   
-           $idPedido=$nuevoPedido->GuardarPedido();
+            $idPedido=$nuevoPedido->GuardarPedido();
 
            $arrayDetalle=explode(",",$pedido);
            
-
-           foreach ($arrayDetalle as $producto)
+        
+           for($i=0 ; $i < count($arrayDetalle) - 1; $i++)
            {
 
             $detallePedido=new Detalle();
             $detallePedido->idPedido=$idPedido;
-            $detallePedido->producto=$producto;
+            $detallePedido->producto=$arrayDetalle[$i];
             $detallePedido->estado="pendiente";
             
-                if ($producto=='trago'|| $producto=='vino'){
+                if ($arrayDetalle[$i]=='trago'|| $arrayDetalle[$i]=='vino'|| $arrayDetalle[$i]=='coca-cola'){
                     $detallePedido->sector="barra";
                 }
-                if($producto=='pizza'|| $producto=='empanadas' || $producto=='plato')
+                if($arrayDetalle[$i]=='pizza'|| $arrayDetalle[$i]=='empanadas' || $arrayDetalle[$i]=='plato')
                 {
                     $detallePedido->sector="cocina";
                 }
-                if($producto=='cerveza')
+                if($arrayDetalle[$i]=='cerveza')
                 {
                     $detallePedido->sector="chopera";
                 }
-                if($producto=='postre')
+                if($arrayDetalle[$i]=='postre')
                 {
                     $detallePedido->sector="candy bar";
                 }
+                
+                
         
-            $detallePedido->GuardarDetalle();
+           $detallePedido->GuardarDetalle();
 
            }
 
@@ -126,7 +133,6 @@ public static function ServirPedido($request, $response, $args)
     $miDetalle->idDetalle=$idDetalle;
    $miDetalle->tiempoServido=$tiempoServido;
    $respuesta=$miDetalle->ServirDetalle();
-
    
     return $response->withJson($respuesta,200);
 

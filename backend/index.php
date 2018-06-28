@@ -8,6 +8,7 @@ require_once './clases/AccesoDatos.php';
 require_once './clases/EmpleadoApi.php';
 require_once './clases/PedidoApi.php';
 require_once './clases/SesionApi.php';
+require_once './clases/ProductoApi.php';
 require_once './clases/AutentificadorJWT.php';
 require_once './clases/MWparaCORS.php';
 require_once './clases/MWparaAutentificar.php';
@@ -52,8 +53,10 @@ $app->group('/Pedidos', function(){
   $this->post('/ServirPedido',\PedidoApi::class . ':ServirPedido');
   $this->post('/TiempoRestante',\PedidoApi::class . ':TiempoRestante');
   
+});
 
-
+$app->group('/Productos', function(){
+  $this->get('/{nombre}',\ProductoApi::class . ':TraerProducto'); 
 });
 
 

@@ -29,6 +29,18 @@ public static function TraerTodosLosProductos()
 									
 }
 
+public static function TraerProducto($nombre) 
+{
+    $objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
+    $consulta =$objetoAccesoDato->RetornarConsulta("SELECT * from productos WHERE nombre= :nombre ");  
+    $consulta->bindValue(':nombre', $nombre, PDO::PARAM_STR);
+	$consulta->execute();
+	$producto= $consulta->fetchObject('Producto');
+            
+    return $producto;
+									
+}
+
 public function BorrarProducto()
 {
     $objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
