@@ -34,7 +34,7 @@ public function GuardarDetalle()
 public static function TraerTodosLosPedidos() 
 {
 			$objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
-			$consulta =$objetoAccesoDato->RetornarConsulta("SELECT * from pedipedidodetalle");  
+			$consulta =$objetoAccesoDato->RetornarConsulta("SELECT * from pedidodetalle");  
 			$consulta->execute();
 			$pedidos= $consulta->fetchAll(PDO::FETCH_CLASS, "Pedido");
             
@@ -115,6 +115,19 @@ public static function TiempoRestante($idMesa, $idPedido)
 
     return $consulta->fetch();
    
+}
+
+
+public static function TraerDetalleDelPedido($idPedido) 
+{
+			$objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
+			$consulta =$objetoAccesoDato->RetornarConsulta("SELECT * from pedidodetalle where idPedido=$idPedido");  
+			$consulta->execute();
+			$detalles= $consulta->fetchAll(PDO::FETCH_CLASS, "Detalle");
+            
+            return $detalles;
+							
+			
 }
 
 

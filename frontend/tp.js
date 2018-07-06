@@ -447,7 +447,7 @@ function ListaPendientes()
 	respuesta.map(function(detalle, i){
 		
 		tabla=tabla + "<tr><td>"+detalle.idDetalle+"</td><td>"+detalle.idPedido+"</td><td>"+detalle.producto+"</td><td>"+detalle.estado+"</td><td>"+detalle.sector+
-		"</td><td> <button class='btn btn-primary' onclick='PrepararPedido("+detalle.idDetalle+")'>Preparar </button> </td><td><input type='time' id='tiempoPreparacion'></td>"+
+		"</td><td> <button class='btn btn-primary' onclick='PrepararPedido("+detalle.idDetalle+")'>Preparar </button> </td><td><input type='text' id='tiempoPreparacion'></td>"+
 		"<td><button class='btn btn-primary' onclick='ServirPedido("+detalle.idDetalle+")'>Servir</button></td></tr>";
 
 
@@ -467,6 +467,7 @@ function PrepararPedido(indice)
 		"idDetalle":indice,
 		"tiempoPreparacion": tiempo
 	}
+	console.log(tiempoPreparacion);
 	AjaxPost("http://localhost:8080/TP_PROG3_1C_2018/backend/Pedidos/PrepararPedido",objJson,function(respuesta){
 		console.log(respuesta);
 

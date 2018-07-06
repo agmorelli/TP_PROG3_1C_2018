@@ -111,9 +111,12 @@ public static function PrepararPedido($request, $response, $args)
     $idEmpleado=$payload->idEmpleado;
     $idDetalle=$ArrayDeParametros['idDetalle'];
     $tiempoPreparacion=$ArrayDeParametros['tiempoPreparacion'];
+    $tiempoPreparacion=$tiempoPreparacion;
+    $ahora=date('Y/m/d G:i'); 
+    $tiempo=strtotime($ahora. ' + '. $tiempoPreparacion . 'minutes');
     $miDetalle=new Detalle();
     $miDetalle->idDetalle=$idDetalle;
-   $miDetalle->tiempoPreparacion=$tiempoPreparacion;
+   $miDetalle->tiempoPreparacion=date('Y/m/d G:i',$tiempo);
    $miDetalle->idEmpleado=$idEmpleado;
    $miDetalle->estado="en preparacion";
    $respuesta=$miDetalle->PrepararDetalle();
@@ -128,7 +131,7 @@ public static function ServirPedido($request, $response, $args)
     $respuesta=new stdclass();
     $ArrayDeParametros = $request->getParsedBody();
     $idDetalle=$ArrayDeParametros['idDetalle'];
-    $tiempoServido=date('Y/m/d G:i,s');
+    $tiempoServido=date('Y/m/d G:i');
     $miDetalle=new Detalle();
     $miDetalle->idDetalle=$idDetalle;
    $miDetalle->tiempoServido=$tiempoServido;
@@ -144,7 +147,29 @@ public static function TiempoRestante($request, $response, $args)
     $ArrayDeParametros = $request->getParsedBody();
     $idMesa=$ArrayDeParametros['idMesa'];
     $idPedido=$ArrayDeParametros['idPedido'];
-    $respuesta=Detalle::TiempoRestante($idMesa, $idPedido);
+$detalles=Detalle::TraerDetalleDelPedido($idPedido);
+
+$ahora=date('Y/m/d G:i'); 
+
+$arrayRespuesta=array();
+
+foreach($detalles as $d)
+{
+    if($d->estado=="en preparacion")
+    {
+    $tp=strtotime($d->tiempoPreparacion);
+    $now=strtotime($ahora);
+    $tiempoRestante=$tp-$now;
+    $detallesRespuesta->idDetalle=$d->idDetalle;
+    $detallesRespuesta->producto=$d->producto;
+    $detallesRespuesta->tiempoRestante=date('i:s',$tiempoRestante);
+
+    array_push($arrayRespuesta,$detallesRespuesta);
+    }
+}
+    
+$respuesta->pedido=$idPedido;
+$respuesta->detalles=$arrayRespuesta;
 
    
     return $response->withJson($respuesta,200);
