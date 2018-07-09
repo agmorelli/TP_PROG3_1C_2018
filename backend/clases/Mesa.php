@@ -106,9 +106,9 @@ public static function NoSeUso()
     {
 
         $objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso();
-        $consulta = $objetoAccesoDato->RetornarConsulta("SELECT * from mesas WHERE canUsos=''");
+        $consulta = $objetoAccesoDato->RetornarConsulta("SELECT * from mesas WHERE canUsos=0");
         $consulta->execute();
-        $cochera=$consulta->fetchAll(PDO::FETCH_CLASS, "Mesa");
+        $mesa=$consulta->fetchAll(PDO::FETCH_CLASS, "Mesa");
                 if($mesa)
         {
             return $mesa;
@@ -128,6 +128,14 @@ public static function NoSeUso()
         $mesa=$consulta->fetchObject("Mesa");
     
         return $mesa;
+    }
+
+    public function Facturar()
+    {
+        $objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso();
+        $consulta = $objetoAccesoDato->RetornarConsulta("SELECT SUM(prod.precio) from productos as prod where nombre in (SELECT pd.producto FROM pedidoDetalle as pd WHERE pd.idPedido in (SELECT idPedido from pedidos as p where p.idMesa=$this->idMesa) and pd.estado='listo para servir') ");
+        $consulta->execute();
+        return $consulta->fetch();    
     }
 
 

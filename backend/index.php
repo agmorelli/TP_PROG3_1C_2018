@@ -7,6 +7,7 @@ require './composer/vendor/autoload.php';
 require_once './clases/AccesoDatos.php';
 require_once './clases/EmpleadoApi.php';
 require_once './clases/PedidoApi.php';
+require_once './clases/MesaApi.php';
 require_once './clases/SesionApi.php';
 require_once './clases/ProductoApi.php';
 require_once './clases/AutentificadorJWT.php';
@@ -36,13 +37,14 @@ $app->add(function ($req, $res, $next) {
 
 /*LLAMADA A METODOS DE INSTANCIA DE UNA CLASE*/
 $app->group('/Empleados', function () { 
-  $this->get('/', \EmpleadoApi::class . ':traerTodos')->add(\MWparaCORS::class . ':HabilitarCORSTodos')->add(\MWparaAutentificar::class . ':VerificarUsuario');
-  $this->get('/{id}', \EmpleadoApi::class . ':traerUno')->add(\MWparaCORS::class . ':HabilitarCORSTodos');
+ // $this->get('/', \EmpleadoApi::class . ':traerTodos')->add(\MWparaCORS::class . ':HabilitarCORSTodos')->add(\MWparaAutentificar::class . ':VerificarUsuario');
+ // $this->get('/{id}', \EmpleadoApi::class . ':traerUno')->add(\MWparaCORS::class . ':HabilitarCORSTodos');
   $this->post('/', \EmpleadoApi::class . ':CargarUno');
   $this->delete('/', \EmpleadoApi::class . ':BorrarUno');
   $this->post('/ModificarEmpleado', \EmpleadoApi::class . ':ModificarUno');
   $this->put('/Suspender', \EmpleadoApi::class . ':Suspender');  
-  $this->get('/Operaciones/{id}', \EmpleadoApi::class . ':CantidadDeOperaciones');
+  //$this->get('/Operaciones/{id}', \EmpleadoApi::class . ':CantidadDeOperaciones');
+  $this->get('/Logueos', \EmpleadoApi::class . ':IngresosAlSistema');
 })->add(\MWparaAutentificar::class . ':VerificarUsuario')->add(\MWparaCORS::class . ':HabilitarCORS8080')->add(\MWparaCORS::class . ':HabilitarCORSTodos');
 
 
@@ -57,6 +59,14 @@ $app->group('/Pedidos', function(){
 
 $app->group('/Productos', function(){
   $this->get('/{nombre}',\ProductoApi::class . ':TraerProducto'); 
+});
+
+$app->group('/Mesas', function(){
+  $this->post('/Cobrar',\MesaApi::class . ':CobrarMesa'); 
+  $this->post('/Cerrar',\MesaApi::class . ':CerrarMesa');
+  $this->get('/MasUsada',\MesaApi::class . ':MasUtilizada');
+  $this->get('/MenosUsada',\MesaApi::class . ':MenosUtilizada');
+  $this->get('/NoSeUso',\MesaApi::class . ':NoSeUso');
 });
 
 

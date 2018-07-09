@@ -130,6 +130,15 @@ public static function TraerDetalleDelPedido($idPedido)
 			
 }
 
+public static function Cerrar($idMesa){
+
+    $objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
+			$consulta =$objetoAccesoDato->RetornarConsulta("UPDATE `pedidodetalle` as pd SET `estado`='facturado' WHERE pd.idPedido IN (SELECT idPedido from pedidos as p where p.idMesa=$idMesa)");  
+            $consulta->execute();
+           return $consulta->fetch();
+}
+
+
 
 
 

@@ -156,6 +156,16 @@ class EmpleadoApi extends Empleado implements IApiUsable
         return $response->withJson($operaciones, 200);
     }
 
+    public static function IngresosAlSistema($request, $response, $args)
+    {
+        $objDelaRespuesta= new stdclass();
+        $objDelaRespuesta=Empleado::FechasDeLogueo();
+
+        return $response->withJson($objDelaRespuesta, 200);
+
+
+    }
+
     
 
     

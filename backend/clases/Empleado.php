@@ -111,6 +111,15 @@ class Empleado
 			
 	}
 
+	public static function FechasDeLogueo()
+	{
+		$objetoAccesoDato= AccesoDatos::DameUnObjetoAcceso();
+		$consulta=$objetoAccesoDato->RetornarConsulta("SELECT e.usuario, s.horaInicio from empleados as e, sesiones as s where s.idEmpleado=e.id ORDER by e.usuario");
+		$consulta->execute();
+		$fechas= $consulta->fetchAll(PDO::FETCH_CLASS);
+		return $fechas;
+	}
+
 
 
 

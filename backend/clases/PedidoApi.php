@@ -147,14 +147,14 @@ public static function TiempoRestante($request, $response, $args)
     $ArrayDeParametros = $request->getParsedBody();
     $idMesa=$ArrayDeParametros['idMesa'];
     $idPedido=$ArrayDeParametros['idPedido'];
-$detalles=Detalle::TraerDetalleDelPedido($idPedido);
+    $detalles=Detalle::TraerDetalleDelPedido($idPedido);
 
-$ahora=date('Y/m/d G:i'); 
+    $ahora=date('Y/m/d G:i'); 
 
-$arrayRespuesta=array();
+    $arrayRespuesta=array();
 
-foreach($detalles as $d)
-{
+    foreach($detalles as $d)
+    {
     if($d->estado=="en preparacion")
     {
     $tp=strtotime($d->tiempoPreparacion);
@@ -166,14 +166,18 @@ foreach($detalles as $d)
 
     array_push($arrayRespuesta,$detallesRespuesta);
     }
-}
+    }
     
-$respuesta->pedido=$idPedido;
-$respuesta->detalles=$arrayRespuesta;
+    $respuesta->pedido=$idPedido;
+    $respuesta->detalles=$arrayRespuesta;
 
    
     return $response->withJson($respuesta,200);
 }
+
+
+
+
 }
 
 ?>
