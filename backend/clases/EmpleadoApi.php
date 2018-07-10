@@ -119,9 +119,8 @@ class EmpleadoApi extends Empleado implements IApiUsable
 	 
 	    $usuario=$ArrayDeParametros['usuario'];
 	    $clave=$ArrayDeParametros['clave'];
-        
         $empleado=Empleado::ValidarEmpleado($usuario,$clave);
-        $datos = array('usuario' => $empleado->usuario,'perfil' => $empleado->perfil, 'id'=>$empleado->id);
+        $datos = array('usuario' => $empleado->usuario,'perfil' => $empleado->perfil, 'id'=>$empleado->id, 'sector'=>$empleado->sector , 'estado'=>$empleado->estado);
 
 
        $token= AutentificadorJWT::CrearToken($datos);
@@ -166,6 +165,46 @@ class EmpleadoApi extends Empleado implements IApiUsable
 
     }
 
+    public static function OperacionesTodosEmpleados($request, $response, $args)
+    {
+        $objDelaRespuesta= new stdclass();
+        $objDelaRespuesta=Empleado::OperacionesTodosLosEmpleados();
+        return $response->withJson($objDelaRespuesta, 200);
+
+    }
+
+    public static function OperacionestodosSectores($request, $response, $args)
+    {
+        $ArrayDeParametros = $request->getParsedBody();
+	    $sector=$ArrayDeParametros['sector'];
+        $objDelaRespuesta= new stdclass();
+        $objDelaRespuesta=Empleado::CantidadOperacionesTodosSectores($sector);
+        return $response->withJson($objDelaRespuesta, 200);
+
+    }
+
+    public static function OperacionesEmpleadoSeparado($request, $response, $args)
+    {
+        
+        $idEmpleado=$args['idEmpleado'];
+        $objDelaRespuesta= new stdclass();
+        $objDelaRespuesta=Empleado::CantidadOperacionesEmpleadoSeparado($idEmpleado);
+        return $response->withJson($objDelaRespuesta, 200);
+
+    }
+    
+    public static function OperacionesEmpleadosSector($request, $response, $args)
+    {
+        
+        $sector=$args['sector'];
+        
+        $objDelaRespuesta= new stdclass();
+        $objDelaRespuesta=Empleado::CantidadOperacionesEmpleadoPorSector($sector);
+        return $response->withJson($objDelaRespuesta, 200);
+
+    }
+
+   
     
 
     

@@ -175,6 +175,61 @@ public static function TiempoRestante($request, $response, $args)
     return $response->withJson($respuesta,200);
 }
 
+public static function CancelarPedido($request, $response, $args)
+{
+    $respuesta=new stdclass();
+    $ArrayDeParametros = $request->getParsedBody();
+    $idPedido=$ArrayDeParametros['idPedido'];
+    $respuesta= Detalle::CancelarDetalles($idPedido);
+   
+    return $response->withJson($respuesta,200);
+}
+
+public static function TraerCancelados($request, $response, $args)
+{
+    $respuesta=new stdclass();
+    $respuesta= Pedido::PedidosCancelados();
+   
+    return $response->withJson($respuesta,200);
+}
+
+
+
+public static function TraerMasVendido($request, $response, $args)
+{
+    $respuesta=new stdclass();
+    $respuesta= Pedido::MasVendido();
+   
+    return $response->withJson($respuesta,200);
+}
+
+
+public static function TraerMenosVendido($request, $response, $args)
+{
+    $respuesta=new stdclass();
+    $respuesta= Pedido::MenosVendido();
+   
+    return $response->withJson($respuesta,200);
+}
+
+
+public static function NoEntregadosATiempo($request, $response, $args)
+{
+    $respuesta=array();
+    $detalles= Detalle::TraerTodosLosDetalles();
+    foreach($detalles as $d)
+    {
+        if(strtotime($d->tiempoServido) > strtotime($d->tiempoPreparacion))
+        {
+            array_push($respuesta, $d);
+        }
+    }
+
+   
+    return $response->withJson($respuesta,200);
+}
+
+
 
 
 

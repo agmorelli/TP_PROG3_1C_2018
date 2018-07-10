@@ -37,6 +37,35 @@ public static function TraerTodosLosPedidos()
 									
 }
 
+public static function PedidosCancelados()
+{
+    $objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
+	$consulta =$objetoAccesoDato->RetornarConsulta("SELECT idPedido, producto, estado from pedidodetalle where estado='cancelado' ");  
+	$consulta->execute();
+	$pedidos= $consulta->fetchAll(PDO::FETCH_CLASS);
+            
+    return $pedidos;
+}
+
+
+public static function MasVendido()
+{
+    $objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
+	$consulta =$objetoAccesoDato->RetornarConsulta("SELECT producto FROM pedidodetalle GROUP BY producto HAVING COUNT(*) =(SELECT COUNT( producto ) tot FROM pedidodetalle GROUP BY producto ORDER BY tot DESC LIMIT 1)");  
+	$consulta->execute();
+	$pedidos= $consulta->fetchAll(PDO::FETCH_CLASS);
+            
+    return $pedidos;
+}
+public static function MenosVendido()
+{
+    $objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
+	$consulta =$objetoAccesoDato->RetornarConsulta("SELECT producto FROM pedidodetalle GROUP BY producto HAVING COUNT(*) =(SELECT COUNT( producto ) tot FROM pedidodetalle GROUP BY producto ORDER BY tot Asc LIMIT 1)");  
+	$consulta->execute();
+	$pedidos= $consulta->fetchAll(PDO::FETCH_CLASS);
+            
+    return $pedidos;
+}
 
 
 

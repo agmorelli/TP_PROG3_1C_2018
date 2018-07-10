@@ -31,12 +31,12 @@ public function GuardarDetalle()
 }
 
 
-public static function TraerTodosLosPedidos() 
+public static function TraerTodosLosDetalles() 
 {
 			$objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
 			$consulta =$objetoAccesoDato->RetornarConsulta("SELECT * from pedidodetalle");  
 			$consulta->execute();
-			$pedidos= $consulta->fetchAll(PDO::FETCH_CLASS, "Pedido");
+			$pedidos= $consulta->fetchAll(PDO::FETCH_CLASS, "Detalle");
             
             return $pedidos;
 							
@@ -59,12 +59,12 @@ public static function TraerUnDetalle($idDetalle)
 public static function TraerPendientes($idEmpleado)
 {
     $objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
-    $consulta =$objetoAccesoDato->RetornarConsulta("SELECT * from pedidodetalle as pd where pd.sector in (select e.sector from empleados as e where e.id=$idEmpleado) and pd.estado=:estado or pd.idEmpleado= $idEmpleado");  
+    $consulta =$objetoAccesoDato->RetornarConsulta("SELECT * from pedidodetalle as pd where pd.sector in (select e.sector from empleados as e where e.id=$idEmpleado) and pd.estado in (select pd.estado from pedidodetalle where pd.estado='pendiente' or pd.estado='en preparacion');  ");  
     $consulta->bindValue(':estado', "pendiente", PDO::PARAM_STR);
     //$consulta->bindValue(':id', $idEmpleado, PDO::PARAM_STR);
     $consulta->execute();
     $pedidos= $consulta->fetchAll(PDO::FETCH_CLASS, "Detalle");
-    
+   // $consulta =$objetoAccesoDato->RetornarConsulta("SELECT * from pedidodetalle as pd where pd.sector in (select e.sector from empleados as e where e.id=$idEmpleado) and pd.estado=:estado or pd.estado= $idEmpleado");
     return $pedidos;
 }
 
@@ -133,7 +133,16 @@ public static function TraerDetalleDelPedido($idPedido)
 public static function Cerrar($idMesa){
 
     $objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
-			$consulta =$objetoAccesoDato->RetornarConsulta("UPDATE `pedidodetalle` as pd SET `estado`='facturado' WHERE pd.idPedido IN (SELECT idPedido from pedidos as p where p.idMesa=$idMesa)");  
+			$consulta =$objetoAccesoDato->RetornarConsulta("UPDATE `pedidodetalle` as pd SET pd.estado ='facturado' WHERE pd.idPedido IN (SELECT p.id from pedidos as p where p.idMesa=$idMesa)");  
+            $consulta->execute();
+           return $consulta->fetch();
+}
+
+public static function CancelarDetalles($idPedido)
+{
+    
+            $objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
+			$consulta =$objetoAccesoDato->RetornarConsulta("UPDATE `pedidodetalle` as pd SET `estado`='cancelado' WHERE pd.idPedido = $idPedido");  
             $consulta->execute();
            return $consulta->fetch();
 }

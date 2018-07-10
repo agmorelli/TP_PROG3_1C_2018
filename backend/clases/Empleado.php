@@ -120,10 +120,55 @@ class Empleado
 		return $fechas;
 	}
 
+	public static function OperacionesTodosLosEmpleados()
+	{
+		$objetoAccesoDato= AccesoDatos::DameUnObjetoAcceso();
+		$consulta=$objetoAccesoDato->RetornarConsulta("SELECT e.usuario as empleado, COUNT(*) as operaciones FROM empleados as e, pedidodetalle as pd WHERE pd.idEmpleado= e.id GROUP by e.usuario");
+		$consulta->execute();
+		$operaciones= $consulta->fetchAll(PDO::FETCH_CLASS);
+		return $operaciones;
+		
+	}
+
+	public static function CantidadOperacionesTodosSectores()
+	{
+		$objetoAccesoDato= AccesoDatos::DameUnObjetoAcceso();
+		$consulta=$objetoAccesoDato->RetornarConsulta("SELECT sector as sector, COUNT(*) as operaciones from pedidodetalle GROUP by sector");
+		$consulta->execute();
+		$operaciones= $consulta->fetchAll(PDO::FETCH_CLASS);
+		return $operaciones;
+		
+	}
+
+	public static function CantidadOperacionesEmpleadoSeparado($idEmpleado)
+	{
+		$objetoAccesoDato= AccesoDatos::DameUnObjetoAcceso();
+		$consulta=$objetoAccesoDato->RetornarConsulta("SELECT e.usuario, COUNT(*) as operaciones from empleados as e, pedidodetalle as pd where pd.idEmpleado in (SELECT e.id from empleados WHERE e.id= :idEmpleado)");
+		$consulta->bindValue(':idEmpleado', $idEmpleado, PDO::PARAM_INT);
+		
+		$consulta->execute();
+		$operaciones= $consulta->fetchAll(PDO::FETCH_CLASS);
+		return $operaciones;
+		
+	}
+
+
+	public static function CantidadOperacionesEmpleadoPorSector($sector)
+	{
+		var_dump($sector);
+		$objetoAccesoDato= AccesoDatos::DameUnObjetoAcceso();
+		$consulta=$objetoAccesoDato->RetornarConsulta("SELECT e.usuario, COUNT(*) as operaciones FROM empleados as e, pedidodetalle as pd WHERE pd.idEmpleado= e.id and pd.sector=:sector GROUP by e.usuario");
+		$consulta->bindValue(':sector', $sector, PDO::PARAM_STR);
+		
+		$consulta->execute();
+		$operaciones= $consulta->fetchAll(PDO::FETCH_CLASS);
+		return $operaciones;
+		
+	}
 
 
 
-	
+
 
 
 	public static function ValidarEmpleado($usuario, $clave) 

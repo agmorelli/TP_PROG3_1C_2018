@@ -179,7 +179,7 @@ objJson=
 function TraerEmpleados()
 {
 
-	AjaxGet("http://localhost:8080/TP_PROG3_1C_2018/backend/Empleados/",function(respuesta){
+	AjaxGet("http://localhost:8080/TP_PROG3_1C_2018/backend/Empleados/ListaEmpleados",function(respuesta){
 
 var tabla="<table class='table  table-light'>"+
 			"<thead>"+

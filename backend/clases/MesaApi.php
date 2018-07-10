@@ -1,6 +1,8 @@
 <?php
 
 require_once "Mesa.php";
+require_once "Factura.php";
+
 
 class MesaApi{
 
@@ -41,7 +43,13 @@ public static function CobrarMesa($request, $response, $args)
     $total=$laMesa->Facturar();
     $laMesa->estado="cliente pagando";
     $laMesa->ModificarMesa();
-    //Detalle::Cerrar($idMesa);
+    $laFactura= new Factura();
+    $laFactura->importe=(int)$total['total'];
+    $laFactura->mesa=$laMesa->idMesa;
+    $laFactura->fecha=date('Y-m-d');
+    //var_dump($laFactura);
+    $laFactura->GuardarFactura();
+    Detalle::Cerrar($idMesa);
     $respuesta=$total;
 
    
@@ -67,8 +75,8 @@ public static function NoSeUso($request, $response, $args)
     return $response->withJson($respuesta,200);
     
 }
-/*
-public static function CerrarMesa($request, $response, $args)
+
+/*public static function CerrarMesa($request, $response, $args)
 {
     $respuesta=new stdclass();
     $ArrayDeParametros = $request->getParsedBody();
@@ -84,6 +92,77 @@ public static function CerrarMesa($request, $response, $args)
    
 
 }*/
+
+public static function MasFacturo($request, $response, $args)
+{
+    $respuesta=new stdclass();
+  
+
+   $respuesta= Mesa::LaQueMasFacturo();
+
+   
+   return $response->withJson($respuesta,200);
+   
+
+}
+
+public static function MenosFacturo($request, $response, $args)
+{
+    $respuesta=new stdclass();
+  
+
+   $respuesta= Mesa::LaQueMenosFacturo();
+
+   
+   return $response->withJson($respuesta,200);
+   
+
+}
+
+public static function MenorFactura($request, $response, $args)
+{
+    $respuesta=new stdclass();
+  
+
+   $respuesta= Mesa::LaDeMenorImporte();
+
+   
+   return $response->withJson($respuesta,200);
+   
+
+}
+
+public static function MayorFactura($request, $response, $args)
+{
+    $respuesta=new stdclass();
+  
+
+   $respuesta= Mesa::LaDeMayorImporte();
+
+   
+   return $response->withJson($respuesta,200);
+   
+
+}
+
+
+
+public static function FacturadoEntreFechas($request, $response, $args)
+
+{   
+    $parametros = $request->getParsedBody();
+    $mesa=$parametros['mesa'];
+    $desde=$parametros['desde'];
+    $hasta=$parametros['hasta'];
+    $respuesta=new stdclass();
+
+   $respuesta= Mesa::FacturadoDesdeHasta($mesa, $desde, $hasta);
+
+   
+   return $response->withJson($respuesta,200);
+   
+
+}
 
 
 }

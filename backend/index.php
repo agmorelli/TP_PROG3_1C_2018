@@ -13,6 +13,7 @@ require_once './clases/ProductoApi.php';
 require_once './clases/AutentificadorJWT.php';
 require_once './clases/MWparaCORS.php';
 require_once './clases/MWparaAutentificar.php';
+require_once './clases/MWLaComanda.php';
 
 
 $config['displayErrorDetails'] = true;
@@ -37,14 +38,18 @@ $app->add(function ($req, $res, $next) {
 
 /*LLAMADA A METODOS DE INSTANCIA DE UNA CLASE*/
 $app->group('/Empleados', function () { 
- // $this->get('/', \EmpleadoApi::class . ':traerTodos')->add(\MWparaCORS::class . ':HabilitarCORSTodos')->add(\MWparaAutentificar::class . ':VerificarUsuario');
- // $this->get('/{id}', \EmpleadoApi::class . ':traerUno')->add(\MWparaCORS::class . ':HabilitarCORSTodos');
   $this->post('/', \EmpleadoApi::class . ':CargarUno');
   $this->delete('/', \EmpleadoApi::class . ':BorrarUno');
   $this->post('/ModificarEmpleado', \EmpleadoApi::class . ':ModificarUno');
   $this->put('/Suspender', \EmpleadoApi::class . ':Suspender');  
-  //$this->get('/Operaciones/{id}', \EmpleadoApi::class . ':CantidadDeOperaciones');
+  $this->get('/Operaciones/{id}', \EmpleadoApi::class . ':CantidadDeOperaciones');
   $this->get('/Logueos', \EmpleadoApi::class . ':IngresosAlSistema');
+  $this->get('/OperacionesEmpleados', \EmpleadoApi::class . ':OperacionesTodosEmpleados');
+  $this->get('/OperacionesSector/{sector}', \EmpleadoApi::class . ':OperacionesPorSector');
+  $this->get('/OperacionesEmpleado/{idEmpleado}', \EmpleadoApi::class . ':OperacionesEmpleadoSeparado');
+  $this->get('/OperacionesEmpleadoSector/{sector}', \EmpleadoApi::class . ':OperacionesEmpleadosSector');
+  $this->post('/ListaEmpleados', \EmpleadoApi::class . ':traerTodos')->add(\MWLaComanda::class . ':VerificarAdministrador');//->add(\MWparaAutentificar::class . ':VerificarUsuario');
+  $this->get('/TraerUno/{id}', \EmpleadoApi::class . ':traerUno')->add(\MWparaCORS::class . ':HabilitarCORSTodos');
 })->add(\MWparaAutentificar::class . ':VerificarUsuario')->add(\MWparaCORS::class . ':HabilitarCORS8080')->add(\MWparaCORS::class . ':HabilitarCORSTodos');
 
 
@@ -54,8 +59,13 @@ $app->group('/Pedidos', function(){
   $this->post('/PrepararPedido',\PedidoApi::class . ':PrepararPedido');
   $this->post('/ServirPedido',\PedidoApi::class . ':ServirPedido');
   $this->post('/TiempoRestante',\PedidoApi::class . ':TiempoRestante');
+  $this->post('/Cancelar',\PedidoApi::class . ':CancelarPedido');
+  $this->get('/Cancelados',\PedidoApi::class . ':TraerCancelados');
+  $this->get('/MasVendido',\PedidoApi::class . ':TraerMasVendido');
+  $this->get('/MenosVendido',\PedidoApi::class . ':TraerMenosVendido');
+  $this->get('/NoEntregadosATiempo',\PedidoApi::class . ':NoEntregadosATiempo');
   
-});
+})->add(\MWLaComanda::class . ':VerificarSuspendido');
 
 $app->group('/Productos', function(){
   $this->get('/{nombre}',\ProductoApi::class . ':TraerProducto'); 
@@ -67,6 +77,11 @@ $app->group('/Mesas', function(){
   $this->get('/MasUsada',\MesaApi::class . ':MasUtilizada');
   $this->get('/MenosUsada',\MesaApi::class . ':MenosUtilizada');
   $this->get('/NoSeUso',\MesaApi::class . ':NoSeUso');
+  $this->get('/MasFacturo',\MesaApi::class . ':MasFacturo');
+  $this->get('/MenosFacturo',\MesaApi::class . ':MenosFacturo');
+  $this->get('/MenorFactura',\MesaApi::class . ':MenorFactura');
+  $this->get('/MayorFactura',\MesaApi::class . ':MayorFactura');
+  $this->post('/FacturadoEntreFechas',\MesaApi::class . ':FacturadoEntreFechas');
 });
 
 

@@ -133,9 +133,65 @@ public static function NoSeUso()
     public function Facturar()
     {
         $objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso();
-        $consulta = $objetoAccesoDato->RetornarConsulta("SELECT SUM(prod.precio) from productos as prod where nombre in (SELECT pd.producto FROM pedidoDetalle as pd WHERE pd.idPedido in (SELECT idPedido from pedidos as p where p.idMesa=$this->idMesa) and pd.estado='listo para servir') ");
+        $consulta = $objetoAccesoDato->RetornarConsulta("SELECT SUM(prod.precio) as total from productos as prod where nombre in (SELECT pd.producto FROM pedidodetalle as pd WHERE pd.idPedido in (SELECT id from pedidos as p where p.idMesa=$this->idMesa) and pd.estado='listo para servir') ");
         $consulta->execute();
         return $consulta->fetch();    
+    }
+
+    public static function LaQueMasFacturo()
+    {
+        $objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso();
+        $consulta = $objetoAccesoDato->RetornarConsulta("SELECT f.mesa, sum(f.importe) total FROM facturas as f GROUP by f.mesa ORDER BY total DESC LIMIT 1");
+        $consulta->execute();
+        $mesa=$consulta->fetchAll(PDO::FETCH_CLASS);
+    
+        return $mesa;
+    }
+
+    public static function LaQueMenosFacturo()
+    {
+        $objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso();
+        $consulta = $objetoAccesoDato->RetornarConsulta("SELECT f.mesa, sum(f.importe) total FROM facturas as f GROUP by f.mesa ORDER BY total ASC LIMIT 1");
+        $consulta->execute();
+        $mesa=$consulta->fetchAll(PDO::FETCH_CLASS);
+    
+        return $mesa;
+    }      
+
+    public static function LaDeMenorImporte()
+    {
+        $objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso();
+        $consulta = $objetoAccesoDato->RetornarConsulta("SELECT f.mesa, f.importe from facturas as f where f.importe = (SELECT MIN(importe) from facturas)");
+        $consulta->execute();
+        $mesa=$consulta->fetchAll(PDO::FETCH_CLASS);
+
+        return $mesa;
+
+    }
+
+    public static function LaDeMayorImporte()
+    {
+        $objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso();
+        $consulta = $objetoAccesoDato->RetornarConsulta("SELECT f.mesa, f.importe from facturas as f where f.importe = (SELECT MAX(importe) from facturas)");
+        $consulta->execute();
+        $mesa=$consulta->fetchAll(PDO::FETCH_CLASS);
+
+        return $mesa;
+
+    }
+
+    public static function FacturadoDesdeHasta($mesa, $desde, $hasta)
+    {
+        $objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso();
+        $consulta = $objetoAccesoDato->RetornarConsulta("SELECT SUM(f.importe) total FROM facturas as f WHERE f.mesa= :mesa AND f.fecha <= :hasta AND f.fecha >= :desde");
+        $consulta->bindValue(':mesa', $mesa, PDO::PARAM_INT);
+        $consulta->bindValue(':desde', $desde, PDO::PARAM_STR);
+        $consulta->bindValue(':hasta', $hasta, PDO::PARAM_STR);
+        $consulta->execute();
+        $mesa=$consulta->fetchAll(PDO::FETCH_CLASS);
+
+        return $mesa;
+
     }
 
 
