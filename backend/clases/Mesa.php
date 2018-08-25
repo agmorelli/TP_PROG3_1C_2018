@@ -82,7 +82,7 @@ class Mesa
             return $mesa;
         }
         else{
-            throw new Exception("Todas las cocheras de este tipo estan ocupadas.");
+            throw new Exception("Todas las mesas de este tipo estan ocupadas.");
         }
 
     }

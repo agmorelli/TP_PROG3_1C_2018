@@ -6,6 +6,22 @@ require_once "Factura.php";
 
 class MesaApi{
 
+public static function CargarMesa($request, $response, $args)
+{
+    $respuesta=new stdclass();
+    $ArrayDeParametros = $request->getParsedBody();
+    $idMesa=$ArrayDeParametros['idMesa'];
+    $mesa=new Mesa();
+    $mesa->idMesa=$idMesa;
+    $mesa->estado="cerrada";
+    $mesa->canUsos=0;
+    $respuesta=$mesa->GuardarMesa();
+
+   
+    return $response->withJson($respuesta,200);
+
+}
+
 public static function ServirMesa($request, $response, $args)
 {
     $respuesta=new stdclass();
@@ -76,22 +92,7 @@ public static function NoSeUso($request, $response, $args)
     
 }
 
-/*public static function CerrarMesa($request, $response, $args)
-{
-    $respuesta=new stdclass();
-    $ArrayDeParametros = $request->getParsedBody();
-    $idMesa=$ArrayDeParametros['idMesa'];
-    $laMesa= Mesa::TraerUnaMesa($idMesa);
-   $laMesa->estado="cerrada";
-  
 
-   $respuesta= $lamesa->ModificarMesa();
-
-   
-   return $response->withJson($respuesta,200);
-   
-
-}*/
 
 public static function MasFacturo($request, $response, $args)
 {

@@ -62,10 +62,10 @@ public static function CerrarSesion($request, $response)
     }
  catch(Exception $e)
         {
-            return $e->getMessage();
+            $respuesta= $e->getMessage();
         }
 
-        return $respuesta;
+         return $response->withJson($respuesta, 200);		
 
 }
 

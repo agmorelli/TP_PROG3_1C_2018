@@ -157,16 +157,19 @@ public static function TiempoRestante($request, $response, $args)
     {
     if($d->estado=="en preparacion")
     {
+        $detallesRespuesta= new stdclass();
     $tp=strtotime($d->tiempoPreparacion);
     $now=strtotime($ahora);
     $tiempoRestante=$tp-$now;
     $detallesRespuesta->idDetalle=$d->idDetalle;
     $detallesRespuesta->producto=$d->producto;
+    
     $detallesRespuesta->tiempoRestante=date('i:s',$tiempoRestante);
 
     array_push($arrayRespuesta,$detallesRespuesta);
     }
     }
+   
     
     $respuesta->pedido=$idPedido;
     $respuesta->detalles=$arrayRespuesta;

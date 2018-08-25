@@ -65,7 +65,7 @@ $app->group('/Pedidos', function(){
   $this->get('/MenosVendido',\PedidoApi::class . ':TraerMenosVendido');
   $this->get('/NoEntregadosATiempo',\PedidoApi::class . ':NoEntregadosATiempo');
   
-})->add(\MWLaComanda::class . ':VerificarSuspendido');
+});//->add(\MWLaComanda::class . ':VerificarSuspendido');
 
 $app->group('/Productos', function(){
   $this->get('/{nombre}',\ProductoApi::class . ':TraerProducto'); 
