@@ -2,10 +2,12 @@
 
 class Producto
 {
+    public $id;
     public $nombre;
     public $precio;
+    public $responsable;
 
-    
+    /*
 public function GuardarProducto()
 {
  
@@ -16,14 +18,14 @@ public function GuardarProducto()
     $consulta->execute();
 	return $objetoAccesoDato->RetornarUltimoIdInsertado();
 }
-
+*/
 
 public static function TraerTodosLosProductos() 
 {
     $objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
 	$consulta =$objetoAccesoDato->RetornarConsulta("SELECT * from productos ");  
 	$consulta->execute();
-	$producto= $consulta->fetchAll(PDO::FETCH_CLASS, "Productos");
+	$producto= $consulta->fetchAll(PDO::FETCH_CLASS, "Producto");
             
     return $producto;
 									
@@ -40,7 +42,7 @@ public static function TraerProducto($nombre)
     return $producto;
 									
 }
-
+/*
 public function BorrarProducto()
 {
     $objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
@@ -67,7 +69,7 @@ public function ModificarProducto()
 
 }
 
-
+*/
 }
 
 ?>

@@ -23,6 +23,7 @@ class MWparaAutentificar
 		$objDelaRespuesta->respuesta="";
 		$ArrayDeParametros = $request->getParsedBody();
 		$token=$ArrayDeParametros['token'];
+		$payload=AutentificadorJWT::ObtenerData($token);
 		
 	   
 		if($request->isGet())

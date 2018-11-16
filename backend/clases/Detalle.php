@@ -56,14 +56,15 @@ public static function TraerUnDetalle($idDetalle)
 			
 }
 
-public static function TraerPendientes($idEmpleado)
+public static function TraerPendientes($id)
 {
     $objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
-    $consulta =$objetoAccesoDato->RetornarConsulta("SELECT * from pedidodetalle as pd, empleados as e where pd.sector in(SELECT e.sector from empleados where e.id=:id) and (pd.estado='pendiente' or pd.estado='en preparacion') and (pd.idEmpleado=:id or pd.idEmpleado=0)");  
-    $consulta->bindValue(':estado', "pendiente", PDO::PARAM_STR);
-    $consulta->bindValue(':id', $idEmpleado, PDO::PARAM_INT);
+    $consulta =$objetoAccesoDato->RetornarConsulta("SELECT * from pedidodetalle as pd where pd.sector in(SELECT e.perfil from usuarios as e where e.id=$id) and (pd.estado='pendiente' or pd.estado='en preparacion') and (pd.idEmpleado=$id or pd.idEmpleado=0)");  
+   // $consulta->bindValue(':estado', "pendiente", PDO::PARAM_STR);
+   // $consulta->bindValue(':id', $idEmpleado, PDO::PARAM_INT);
     $consulta->execute();
     $pedidos= $consulta->fetchAll(PDO::FETCH_CLASS, "Detalle");
+    
    // $consulta =$objetoAccesoDato->RetornarConsulta("SELECT * from pedidodetalle as pd where pd.sector in (select e.sector from empleados as e where e.id=$idEmpleado) and pd.estado=:estado or pd.estado= $idEmpleado");
     return $pedidos;
 }

@@ -5,7 +5,7 @@ use \Psr\Http\Message\ResponseInterface as Response;
 
 require './composer/vendor/autoload.php';
 require_once './clases/AccesoDatos.php';
-require_once './clases/EmpleadoApi.php';
+require_once './clases/UsuarioApi.php';
 require_once './clases/PedidoApi.php';
 require_once './clases/MesaApi.php';
 require_once './clases/SesionApi.php';
@@ -14,6 +14,7 @@ require_once './clases/AutentificadorJWT.php';
 require_once './clases/MWparaCORS.php';
 require_once './clases/MWparaAutentificar.php';
 require_once './clases/MWLaComanda.php';
+require_once './clases/CaptchaApi.php';
 
 
 $config['displayErrorDetails'] = true;
@@ -37,20 +38,20 @@ $app->add(function ($req, $res, $next) {
 
 
 /*LLAMADA A METODOS DE INSTANCIA DE UNA CLASE*/
-$app->group('/Empleados', function () { 
-  $this->post('/', \EmpleadoApi::class . ':CargarUno');
-  $this->delete('/', \EmpleadoApi::class . ':BorrarUno');
-  $this->post('/ModificarEmpleado', \EmpleadoApi::class . ':ModificarUno');
-  $this->put('/Suspender', \EmpleadoApi::class . ':Suspender');  
-  $this->get('/Operaciones/{id}', \EmpleadoApi::class . ':CantidadDeOperaciones');
-  $this->get('/Logueos', \EmpleadoApi::class . ':IngresosAlSistema');
-  $this->get('/OperacionesEmpleados', \EmpleadoApi::class . ':OperacionesTodosEmpleados');
-  $this->get('/OperacionesSector/{sector}', \EmpleadoApi::class . ':OperacionesPorSector');
-  $this->get('/OperacionesEmpleado/{idEmpleado}', \EmpleadoApi::class . ':OperacionesEmpleadoSeparado');
-  $this->get('/OperacionesEmpleadoSector/{sector}', \EmpleadoApi::class . ':OperacionesEmpleadosSector');
-  $this->post('/ListaEmpleados', \EmpleadoApi::class . ':traerTodos')->add(\MWLaComanda::class . ':VerificarAdministrador');//->add(\MWparaAutentificar::class . ':VerificarUsuario');
-  $this->get('/TraerUno/{id}', \EmpleadoApi::class . ':traerUno')->add(\MWparaCORS::class . ':HabilitarCORSTodos');
-})->add(\MWparaAutentificar::class . ':VerificarUsuario')->add(\MWparaCORS::class . ':HabilitarCORS8080')->add(\MWparaCORS::class . ':HabilitarCORSTodos');
+$app->group('/Usuarios', function () { 
+  $this->post('/Carga', \UsuarioApi::class . ':CargarUno');
+  $this->post('/Borrar', \UsuarioApi::class . ':BorrarUno');
+  $this->post('/ModificarUsuario', \UsuarioApi::class . ':ModificarUno');
+  $this->post('/Suspender', \UsuarioApi::class . ':Suspender');  
+  $this->get('/Operaciones/{id}', \UsuarioApi::class . ':CantidadDeOperaciones');
+  $this->get('/Logueos', \UsuarioApi::class . ':IngresosAlSistema');
+  $this->get('/OperacionesUsuarios', \UsuarioApi::class . ':OperacionesTodosUsuarios');
+  $this->get('/OperacionesSector/{sector}', \UsuarioApi::class . ':OperacionesPorSector');
+  $this->get('/OperacionesUsuario/{idUsuario}', \UsuarioApi::class . ':OperacionesUsuarioSeparado');
+  $this->get('/OperacionesUsuarioSector/{sector}', \UsuarioApi::class . ':OperacionesUsuariosSector');
+  $this->get('/ListaUsuarios', \UsuarioApi::class . ':traerTodos');//->add(\MWLaComanda::class . ':VerificarAdministrador');//->add(\MWparaAutentificar::class . ':VerificarUsuario');
+  $this->get('/TraerUno/{id}', \UsuarioApi::class . ':traerUno')->add(\MWparaCORS::class . ':HabilitarCORSTodos');
+})/*->add(\MWparaAutentificar::class . ':VerificarUsuario')*/->add(\MWparaCORS::class . ':HabilitarCORS8080')->add(\MWparaCORS::class . ':HabilitarCORSTodos');
 
 
 $app->group('/Pedidos', function(){
@@ -68,11 +69,18 @@ $app->group('/Pedidos', function(){
 });//->add(\MWLaComanda::class . ':VerificarSuspendido');
 
 $app->group('/Productos', function(){
-  $this->get('/{nombre}',\ProductoApi::class . ':TraerProducto'); 
+  $this->get('/TraerTodos',\ProductoApi::class . ':TraerTodos'); 
+});
+
+$app->group('/Captcha', function(){ 
+  $this->post('/',\CaptchaApi::class . ':RecibirCaptcha'); 
 });
 
 $app->group('/Mesas', function(){
+  $this->get('/TraerTodas',\MesaApi::class . ':TraerTodos');
+  $this->post('/ServirMesa',\MesaApi::class . ':ServirMesa'); 
   $this->post('/Cobrar',\MesaApi::class . ':CobrarMesa'); 
+  $this->post('/FotoMesa',\MesaApi::class . ':IngresarFotoMesa'); 
   $this->post('/Cerrar',\MesaApi::class . ':CerrarMesa');
   $this->get('/MasUsada',\MesaApi::class . ':MasUtilizada');
   $this->get('/MenosUsada',\MesaApi::class . ':MenosUtilizada');
@@ -86,11 +94,13 @@ $app->group('/Mesas', function(){
 
 
 
+
+
 $app->group('/Sesion', function(){
   $this->post('/',\SesionApi::class . ':Login');
-  $this->put('/Salir', \SesionApi::class . ':CerrarSesion');
+  $this->post('/Salir', \SesionApi::class . ':CerrarSesion');
 
-});
+})->add(\MWparaCORS::class . ':HabilitarCORSTodos');
 
 
 

@@ -1,20 +1,20 @@
 <?php
-class Empleado
+class Usuario
 {
 	public $id;
 	public $usuario;
   	public $clave;
-	  public $sector;
-	  public $perfil;
-	  public $estado;
+	public $perfil;
+	public $sexo;
+	public $estado;
 
 
-  	public function BorrarEmpleado()
+  	public function BorrarUsuario()
 	 {
 	 		$objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
 			$consulta =$objetoAccesoDato->RetornarConsulta("
 				delete 
-				from empleados 				
+				from usuarios 				
 				WHERE id=:id");	
 				$consulta->bindValue(':id',$this->id, PDO::PARAM_INT);		
 				$consulta->execute();
@@ -22,16 +22,17 @@ class Empleado
 	 }
 
 
-	public function ModificarEmpleado()
+	public function ModificarUsuario()
 	 {
 
 			$objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
 			$consulta =$objetoAccesoDato->RetornarConsulta("
-				update empleados 
+				update usuarios 
 				set usuario='$this->usuario',
 				clave='$this->clave',
 				perfil='$this->perfil',
-				sector='$this->sector'
+				sexo='$this->sexo',
+				estado='$this->estado'
 				WHERE id='$this->id'");
 				
 			return $consulta->execute();
@@ -39,15 +40,15 @@ class Empleado
 	 }
 	
   
-	 public function InsertarEmpleado()
+	 public function InsertarUsuario()
 	 {
 		 
 		$objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
-		$consulta =$objetoAccesoDato->RetornarConsulta("INSERT into empleados (usuario, clave, sector, perfil, estado) VALUES(:usuario, :clave, :sector, :perfil, :estado)");
+		$consulta =$objetoAccesoDato->RetornarConsulta("INSERT into usuarios (usuario, clave, perfil, sexo, estado) VALUES(:usuario, :clave, :perfil, :sexo, :estado)");
 
 		$consulta->bindValue(':usuario',$this->usuario, PDO::PARAM_STR);
 		$consulta->bindValue(':clave', $this->clave, PDO::PARAM_STR);
-		$consulta->bindValue(':sector', $this->sector, PDO::PARAM_STR);
+		$consulta->bindValue(':sexo', $this->sexo, PDO::PARAM_STR);
 		$consulta->bindValue(':perfil', $this->perfil, PDO::PARAM_STR);
 		$consulta->bindValue(':estado', $this->estado, PDO::PARAM_STR);
 		
@@ -57,56 +58,58 @@ class Empleado
 
 	 }
 
-	  public function ModificarEmpleadoParametros()
+	  public function ModificarUsuarioParametros()
 	 {
 			$objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
 			$consulta =$objetoAccesoDato->RetornarConsulta("
-				update empleados 
+				update usuarios 
 				set usuario=:usuario,
 				clave=:clave,
 				perfil=:perfil,
-				sector=:sector
+				sexo=:sexo,
+				estado=:estado
 				WHERE id=:id");
 			$consulta->bindValue(':id',$this->id, PDO::PARAM_INT);
 			$consulta->bindValue(':usuario',$this->usuario, PDO::PARAM_STR);
 			$consulta->bindValue(':clave', $this->clave, PDO::PARAM_STR);
 			$consulta->bindValue(':sector', $this->sector, PDO::PARAM_STR);
 			$consulta->bindValue(':perfil', $this->perfil, PDO::PARAM_STR);
+			$consulta->bindValue(':estado', $this->estado, PDO::PARAM_STR);
 			
 
 			return $consulta->execute();
 	 }
 
 
-	 public function GuardarEmpleado()
+	 public function GuardarUsuario()
 	 {
 
 	 	if($this->id>0)
 	 		{
-	 			$this->ModificarEmpleado();
+	 			$this->ModificarUsuario();
 	 		}else {
-	 			$this->InsertarEmpleado();
+	 			$this->InsertarUsuario();
 	 		}
 
 	 }
 
 
-  	public static function TraerTodoLosEmpleados()
+  	public static function TraerTodoLosUsuarios()
 	{
 			$objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
-			$consulta =$objetoAccesoDato->RetornarConsulta("SELECT * FROM empleados");
+			$consulta =$objetoAccesoDato->RetornarConsulta("SELECT * FROM usuarios");
 			$consulta->execute();			
-			return $consulta->fetchAll(PDO::FETCH_CLASS, "Empleado");		
+			return $consulta->fetchAll(PDO::FETCH_CLASS, "Usuario");		
 	}
 
 
-	public static function TraerUnEmpleado($id) 
+	public static function TraerUnUsuario($id) 
 	{
 			$objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
-			$consulta =$objetoAccesoDato->RetornarConsulta("select * from empleados where id = $id");
+			$consulta =$objetoAccesoDato->RetornarConsulta("select * from usuarios where id = $id");
 			$consulta->execute();
-			$empleadoBuscado= $consulta->fetchObject('Empleado');
-			return $empleadoBuscado;				
+			$usuario= $consulta->fetchObject('Usuario');
+			return $usuario;				
 
 			
 	}
@@ -114,16 +117,16 @@ class Empleado
 	public static function FechasDeLogueo()
 	{
 		$objetoAccesoDato= AccesoDatos::DameUnObjetoAcceso();
-		$consulta=$objetoAccesoDato->RetornarConsulta("SELECT e.usuario, s.horaInicio from empleados as e, sesiones as s where s.idEmpleado=e.id ORDER by e.usuario");
+		$consulta=$objetoAccesoDato->RetornarConsulta("SELECT u.usuario, s.horaInicio from usuarios as u, sesiones as s where s.idEmpleado=u.id ORDER by u.usuario");
 		$consulta->execute();
 		$fechas= $consulta->fetchAll(PDO::FETCH_CLASS);
 		return $fechas;
 	}
 
-	public static function OperacionesTodosLosEmpleados()
+	public static function OperacionesTodosLosUsuarios()
 	{
 		$objetoAccesoDato= AccesoDatos::DameUnObjetoAcceso();
-		$consulta=$objetoAccesoDato->RetornarConsulta("SELECT e.usuario as empleado, COUNT(*) as operaciones FROM empleados as e, pedidodetalle as pd WHERE pd.idEmpleado= e.id GROUP by e.usuario");
+		$consulta=$objetoAccesoDato->RetornarConsulta("SELECT u.usuario as usuario, COUNT(*) as operaciones FROM usuarios as u, pedidodetalle as pd WHERE pd.idEmpleado= u.id GROUP by u.usuario");
 		$consulta->execute();
 		$operaciones= $consulta->fetchAll(PDO::FETCH_CLASS);
 		return $operaciones;
@@ -133,18 +136,18 @@ class Empleado
 	public static function CantidadOperacionesTodosSectores()
 	{
 		$objetoAccesoDato= AccesoDatos::DameUnObjetoAcceso();
-		$consulta=$objetoAccesoDato->RetornarConsulta("SELECT sector as sector, COUNT(*) as operaciones from pedidodetalle GROUP by sector");
+		$consulta=$objetoAccesoDato->RetornarConsulta("SELECT perfil as perfil, COUNT(*) as operaciones from pedidodetalle GROUP by perfil");
 		$consulta->execute();
 		$operaciones= $consulta->fetchAll(PDO::FETCH_CLASS);
 		return $operaciones;
 		
 	}
 
-	public static function CantidadOperacionesEmpleadoSeparado($idEmpleado)
+	public static function CantidadOperacionesUsuariosSeparado($idUsuario)
 	{
 		$objetoAccesoDato= AccesoDatos::DameUnObjetoAcceso();
-		$consulta=$objetoAccesoDato->RetornarConsulta("SELECT e.usuario, COUNT(*) as operaciones from empleados as e, pedidodetalle as pd where pd.idEmpleado in (SELECT e.id from empleados WHERE e.id= :idEmpleado)");
-		$consulta->bindValue(':idEmpleado', $idEmpleado, PDO::PARAM_INT);
+		$consulta=$objetoAccesoDato->RetornarConsulta("SELECT e.usuario, COUNT(*) as operaciones from usuarios as e, pedidodetalle as pd where pd.idUsuario in (SELECT e.id from usuarios WHERE e.id= :idUsuario)");
+		$consulta->bindValue(':idUsuario', $idUsuario, PDO::PARAM_INT);
 		
 		$consulta->execute();
 		$operaciones= $consulta->fetchAll(PDO::FETCH_CLASS);
@@ -153,12 +156,12 @@ class Empleado
 	}
 
 
-	public static function CantidadOperacionesEmpleadoPorSector($sector)
+	public static function CantidadOperacionesEmpleadoPorSector($perfil)
 	{
-		var_dump($sector);
+		
 		$objetoAccesoDato= AccesoDatos::DameUnObjetoAcceso();
-		$consulta=$objetoAccesoDato->RetornarConsulta("SELECT e.usuario, COUNT(*) as operaciones FROM empleados as e, pedidodetalle as pd WHERE pd.idEmpleado= e.id and pd.sector=:sector GROUP by e.usuario");
-		$consulta->bindValue(':sector', $sector, PDO::PARAM_STR);
+		$consulta=$objetoAccesoDato->RetornarConsulta("SELECT e.usuario, COUNT(*) as operaciones FROM usuarios as e, pedidodetalle as pd WHERE pd.idUsuario= e.id and pd.perfil=:perfil GROUP by e.usuario");
+		$consulta->bindValue(':perfil', $perfil, PDO::PARAM_STR);
 		
 		$consulta->execute();
 		$operaciones= $consulta->fetchAll(PDO::FETCH_CLASS);
@@ -171,28 +174,28 @@ class Empleado
 
 
 
-	public static function ValidarEmpleado($usuario, $clave) 
+    public static function ValidarUsuario($usuario, $clave) 
 	{
 		
 			$objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
-			$consulta =$objetoAccesoDato->RetornarConsulta("SELECT  * from empleados WHERE usuario=:usuario and clave=:clave");
+			$consulta =$objetoAccesoDato->RetornarConsulta("SELECT  * from usuarios WHERE usuario=:usuario and clave=:clave");
 			$consulta->bindValue(':usuario', $usuario, PDO::PARAM_STR);
 			$consulta->bindValue(':clave', $clave, PDO::PARAM_STR);
 			$consulta->execute();
-			$empleadobuscado= $consulta->fetchObject('Empleado');			
+			$usuarioBuscado= $consulta->fetchObject('Usuario');			
 
-				return $empleadobuscado;
+				return $usuarioBuscado;
 			  
 	}
 
 
-		  public static function SuspenderEmpleado($id, $estado)
+		  public static function SuspenderUsuario($id, $estado)
 	 {
 		 
 		 if($estado=="activo")
 		 {
 			$objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
-			$consulta =$objetoAccesoDato->RetornarConsulta("update empleados set estado='suspendido' WHERE id=:id");
+			$consulta =$objetoAccesoDato->RetornarConsulta("update usuarios set estado='suspendido' WHERE id=:id");
 			$consulta->bindValue(':id',$id, PDO::PARAM_INT);
 
 			 $consulta->execute();
@@ -202,7 +205,7 @@ class Empleado
 		 else
 		 {
 			$objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
-			$consulta =$objetoAccesoDato->RetornarConsulta("update empleados set estado='activo' WHERE id=:id");
+			$consulta =$objetoAccesoDato->RetornarConsulta("update usuarios set estado='activo' WHERE id=:id");
 			$consulta->bindValue(':id',$id, PDO::PARAM_INT);
 
 			 $consulta->execute();
@@ -211,10 +214,10 @@ class Empleado
 
 	 }
 
-public static function CantidadDeOperacionesEmp($id)
+public static function CantidadDeOperacionesUsuario($id)
 {
 			$objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
-			$consulta =$objetoAccesoDato->RetornarConsulta("SELECT * FROM operaciones WHERE idEmpleado=:id");
+			$consulta =$objetoAccesoDato->RetornarConsulta("SELECT * FROM operaciones WHERE idUsuario=:id");
 			$consulta->bindValue(':id', $id, PDO::PARAM_INT);
 			 $consulta->execute();
 			 return $consulta->rowCount();

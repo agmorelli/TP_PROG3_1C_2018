@@ -1,17 +1,17 @@
 <?php
-require_once 'Empleado.php';
+require_once 'Usuario.php';
 require_once 'IApiUsable.php';
 require_once 'AutentificadorJWT.php';
 
 
-class EmpleadoApi extends Empleado implements IApiUsable
+class UsuarioApi extends Usuario implements IApiUsable
 {
 
 
  	public function TraerUno($request, $response, $args) {
      	$id=$args['id'];
-        $empleado=Empleado::TraerUnEmpleado($id);
-        if(!$empleado)
+        $Usuario=Usuario::TraerUnUsuario($id);
+        if(!$Usuario)
         {
             $objDelaRespuesta= new stdclass();
             $objDelaRespuesta->error="No existe El usuario";
@@ -24,8 +24,8 @@ class EmpleadoApi extends Empleado implements IApiUsable
     }
 
      public function TraerTodos($request, $response, $args) {
-      	$todosLosEmpleados=Empleado::TraerTodoLosEmpleados();
-     	$newresponse = $response->withJson($todosLosEmpleados,200);  
+      	$todosLosUsuario=Usuario::TraerTodoLosUsuarios();
+     	$newresponse = $response->withJson($todosLosUsuario,200);  
         
     	return $newresponse;
        
@@ -37,21 +37,22 @@ class EmpleadoApi extends Empleado implements IApiUsable
         $ArrayDeParametros = $request->getParsedBody();
         //var_dump($ArrayDeParametros);
          $usuario= $ArrayDeParametros['usuario'];
-          $sector= $ArrayDeParametros['sector'];
         $clave= $ArrayDeParametros['clave'];
         $perfil= $ArrayDeParametros['perfil'];
+        $sexo= $ArrayDeParametros['sexo'];
         $estado= "Activo";
+       
 
-        $miEmpleado= new Empleado();
-        $miEmpleado->usuario=$usuario;
-        $miEmpleado->clave=$clave;
-        $miEmpleado->sector=$sector;
-        $miEmpleado->perfil=$perfil;
-        $miEmpleado->estado=$estado;
+        $miUsuario= new Usuario();
+        $miUsuario->usuario=$usuario;
+        $miUsuario->clave=$clave;
+        $miUsuario->sexo=$sexo;
+        $miUsuario->perfil=$perfil;
+        $miUsuario->estado=$estado;
 
-        $ultimoId=$miEmpleado->InsertarEmpleado();    
+        $ultimoId=$miUsuario->InsertarUsuario();    
         //$response->getBody()->write("se guardo el empleado");
-        $objDelaRespuesta->respuesta="Se guardo el Empleado.";
+        $objDelaRespuesta->respuesta="Se guardo el Usuario.";
         $objDelaRespuesta->ultimoIdGrabado=$ultimoId;   
         return $response->withJson($objDelaRespuesta, 200);
     }
@@ -63,10 +64,10 @@ class EmpleadoApi extends Empleado implements IApiUsable
      	$ArrayDeParametros = $request->getParsedBody();
          
      	$id=$ArrayDeParametros['id'];
-     	$empleado= new Empleado();
-     	$empleado->id=$id;
+     	$Usuario= new Usuario();
+     	$Usuario->id=$id;
          
-     	$cantidadDeBorrados=$empleado->BorrarEmpleado();
+     	$cantidadDeBorrados=$Usuario->BorrarUsuario();
 
      	$objDelaRespuesta= new stdclass();
 	    $objDelaRespuesta->cantidad=$cantidadDeBorrados;
@@ -92,19 +93,19 @@ class EmpleadoApi extends Empleado implements IApiUsable
         $objDelaRespuesta= new stdclass();
 
         $usuario= $ArrayDeParametros['usuario'];
-        $sector= $ArrayDeParametros['sector'];
+        $sexo= $ArrayDeParametros['sexo'];
       $clave= $ArrayDeParametros['clave'];
       $perfil= $ArrayDeParametros['perfil'];
       $id= $ArrayDeParametros['id'];
 
-      $miEmpleado= new Empleado();
-      $miEmpleado->usuario=$usuario;
-      $miEmpleado->clave=$clave;
-      $miEmpleado->sector=$sector;
-      $miEmpleado->perfil=$perfil;
-      $miEmpleado->id=$id;
+      $miUsuario= new Usuario();
+      $miUsuario->usuario=$usuario;
+      $miUsuario->clave=$clave;
+      $miUsuario->sexo=$sexo;
+      $miUsuario->perfil=$perfil;
+      $miUsuario->id=$id;
 
-	   	$resultado =$miEmpleado->ModificarEmpleado();
+	   	$resultado =$miEmpleado->ModificarUsuario();
 	   	$objDelaRespuesta= new stdclass();
 		//var_dump($resultado);
 		$objDelaRespuesta->resultado=$resultado;
@@ -119,12 +120,12 @@ class EmpleadoApi extends Empleado implements IApiUsable
 	 
 	    $usuario=$ArrayDeParametros['usuario'];
 	    $clave=$ArrayDeParametros['clave'];
-        $empleado=Empleado::ValidarEmpleado($usuario,$clave);
-        $datos = array('usuario' => $empleado->usuario,'perfil' => $empleado->perfil, 'id'=>$empleado->id, 'sector'=>$empleado->sector , 'estado'=>$empleado->estado);
+        $usuario=Usuario::ValidarUsuario($usuario,$clave);
+        $datos = array('usuario' => $usuario->usuario,'perfil' => $usuario->perfil, 'id'=>$usuario->id, 'sector'=>$usuario->sector , 'estado'=>$usuario->estado);
 
 
        $token= AutentificadorJWT::CrearToken($datos);
-        $respuesta= array('token'=>$token,'datos'=> $datos);
+        $respuesta= array('token'=>$token);
         
 
 
@@ -139,7 +140,7 @@ class EmpleadoApi extends Empleado implements IApiUsable
          $id=$ArrayDeParametros['id'];
          $estado=$ArrayDeParametros['estado'];   	
  
-         $resultado= Empleado::SuspenderEmpleado($id,$estado);
+         $resultado= Usuario::SuspenderUsuario($id,$estado);
         
 	   	 $objDelaRespuesta= new stdclass();
 		 //var_dump($resultado);
@@ -151,24 +152,24 @@ class EmpleadoApi extends Empleado implements IApiUsable
     public static function CantidadDeOperaciones($request, $response, $args)
     {
         $id=$args['id'];
-        $operaciones=Empleado::CantidadDeOperacionesEmp($id);
+        $operaciones=Usuario::CantidadDeOperacionesUsuario($id);
         return $response->withJson($operaciones, 200);
     }
 
     public static function IngresosAlSistema($request, $response, $args)
     {
         $objDelaRespuesta= new stdclass();
-        $objDelaRespuesta=Empleado::FechasDeLogueo();
+        $objDelaRespuesta=Usuario::FechasDeLogueo();
 
         return $response->withJson($objDelaRespuesta, 200);
 
 
     }
 
-    public static function OperacionesTodosEmpleados($request, $response, $args)
+    public static function OperacionesTodosUsuarios($request, $response, $args)
     {
         $objDelaRespuesta= new stdclass();
-        $objDelaRespuesta=Empleado::OperacionesTodosLosEmpleados();
+        $objDelaRespuesta=Usuario::OperacionesTodosLosUsuarios();
         return $response->withJson($objDelaRespuesta, 200);
 
     }
@@ -176,30 +177,30 @@ class EmpleadoApi extends Empleado implements IApiUsable
     public static function OperacionestodosSectores($request, $response, $args)
     {
         $ArrayDeParametros = $request->getParsedBody();
-	    $sector=$ArrayDeParametros['sector'];
+	    $perfil=$ArrayDeParametros['perfil'];
         $objDelaRespuesta= new stdclass();
-        $objDelaRespuesta=Empleado::CantidadOperacionesTodosSectores($sector);
+        $objDelaRespuesta=Usuario::CantidadOperacionesTodosSectores($perfil);
         return $response->withJson($objDelaRespuesta, 200);
 
     }
 
-    public static function OperacionesEmpleadoSeparado($request, $response, $args)
+    public static function OperacionesUsuarioSeparado($request, $response, $args)
     {
         
-        $idEmpleado=$args['idEmpleado'];
+        $idUsuario=$args['idUsuario'];
         $objDelaRespuesta= new stdclass();
-        $objDelaRespuesta=Empleado::CantidadOperacionesEmpleadoSeparado($idEmpleado);
+        $objDelaRespuesta=Usuario::CantidadOperacionesUsuariosSeparado($idUsuario);
         return $response->withJson($objDelaRespuesta, 200);
 
     }
     
-    public static function OperacionesEmpleadosSector($request, $response, $args)
+    public static function OperacionesUsuariossSector($request, $response, $args)
     {
         
-        $sector=$args['sector'];
+        $perfil=$args['perfil'];
         
         $objDelaRespuesta= new stdclass();
-        $objDelaRespuesta=Empleado::CantidadOperacionesEmpleadoPorSector($sector);
+        $objDelaRespuesta=Usuario::CantidadOperacionesUsuariosPorSector($perfil);
         return $response->withJson($objDelaRespuesta, 200);
 
     }

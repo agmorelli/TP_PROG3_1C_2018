@@ -22,6 +22,52 @@ public static function CargarMesa($request, $response, $args)
 
 }
 
+
+
+public function TraerTodos($request, $response, $args) {
+    $todasLasMesas=Mesa::TraerTodasLasMesas();
+   $newresponse = $response->withJson($todasLasMesas,200);  
+  
+  return $newresponse;
+ 
+}
+
+public static function IngresarFotoMesa($request, $response, $args)
+{
+
+    $objDelaRespuesta= new stdclass();
+        
+
+    //$token=$ArrayDeParametros['token'];
+ //  $payload=AutentificadorJWT::ObtenerData($token);
+  
+  
+
+    $archivos = $request->getUploadedFiles();
+    $destino="./fotos/";
+    $logo="logo.png";
+    
+        $idMesa=$archivos['mesa']->getClientFilename();
+        var_dump($idMesa);
+        $extension= explode(".", $idMesa)  ;
+     
+        $extension=array_reverse($extension);
+
+        $ultimoDestinoFoto=$destino.$idMesa;
+        var_dump($ultimoDestinoFoto);
+
+        if(file_exists($ultimoDestinoFoto))
+        {
+          
+            copy($ultimoDestinoFoto,"./backup/".date("Ymd").$idMesa.".".$extension[0]);
+        }
+
+       // move_uploaded_file($idMesa,$ultimoDestinoFoto); 
+        $archivos['mesa']->moveTo($ultimoDestinoFoto);
+
+
+}
+
 public static function ServirMesa($request, $response, $args)
 {
     $respuesta=new stdclass();
@@ -67,6 +113,7 @@ public static function CobrarMesa($request, $response, $args)
     $laFactura->GuardarFactura();
     Detalle::Cerrar($idMesa);
     $respuesta=$total;
+ 
 
    
     return $response->withJson($respuesta,200);

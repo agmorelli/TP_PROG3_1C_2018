@@ -11,5 +11,13 @@ class ProductoApi{
        $newresponse = $response->withJson($producto, 200);  
       return $newresponse;
     }
+
+    public function TraerTodos($request, $response, $args) {
+        $todosLosProductos=Producto::TraerTodosLosProductos();
+       $newresponse = $response->withJson($todosLosProductos,200);  
+      
+      return $newresponse;
+     
+  }
 }
 ?>

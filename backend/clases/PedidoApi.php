@@ -12,76 +12,43 @@ public static function IngresarPedido($request, $response, $args)
         $objDelaRespuesta= new stdclass();
         
         $ArrayDeParametros = $request->getParsedBody();
-        //$token=$ArrayDeParametros['token'];
-     //  $payload=AutentificadorJWT::ObtenerData($token);
+
       
         $idMesa= $ArrayDeParametros['idMesa'];
-        $pedido= $ArrayDeParametros['pedido'];
+        $pedido= $ArrayDeParametros['detalle'];
         $tiempoInicio= date('Y/m/d G:i,s');
         $laMesa=Mesa::TraerUnaMesa($idMesa);
         $laMesa->estado="con cliente esperando pedido";
         $laMesa->canUsos++;
         $laMesa->ModificarMesa();
-
-        $archivos = $request->getUploadedFiles();
-        $destino="./fotos/";
-        $logo="logo.png";
         
-            $nombreAnterior=$archivos['foto']->getClientFilename();
-            $extension= explode(".", $nombreAnterior)  ;
-         
-            $extension=array_reverse($extension);
-
-            $ultimoDestinoFoto=$destino.$idMesa.".".$extension[0];
-
-            if(file_exists($ultimoDestinoFoto))
-            {
-              
-                copy($ultimoDestinoFoto,"./backup/".date("Ymd").$idMesa.".".$extension[0]);
-            }
-
-            $archivos['foto']->moveTo($ultimoDestinoFoto);
-
             $nuevoPedido= new Pedido();
             $nuevoPedido->idMesa=$idMesa;
             $nuevoPedido->tiempoInicio=$tiempoInicio;
-            $nuevoPedido->fotoMesa=$ultimoDestinoFoto;   
+            $nuevoPedido->fotoMesa="./fotos/".$idMesa.".jpg";   
             $idPedido=$nuevoPedido->GuardarPedido();
 
-           $arrayDetalle=explode(",",$pedido);
+           $arrayDetalle=$pedido;
            
         
-           for($i=0 ; $i < count($arrayDetalle) - 1; $i++)
+           for($i=0 ; $i < count($arrayDetalle) ; $i++)
            {
 
             $detallePedido=new Detalle();
             $detallePedido->idPedido=$idPedido;
-            $detallePedido->producto=$arrayDetalle[$i];
+            $detallePedido->producto=$arrayDetalle[$i]['nombre'];
             $detallePedido->estado="pendiente";
-            
-                if ($arrayDetalle[$i]=='trago'|| $arrayDetalle[$i]=='vino'|| $arrayDetalle[$i]=='coca-cola'){
-                    $detallePedido->sector="barra";
-                }
-                if($arrayDetalle[$i]=='pizza'|| $arrayDetalle[$i]=='empanadas' || $arrayDetalle[$i]=='plato')
-                {
-                    $detallePedido->sector="cocina";
-                }
-                if($arrayDetalle[$i]=='cerveza')
-                {
-                    $detallePedido->sector="chopera";
-                }
-                if($arrayDetalle[$i]=='postre')
-                {
-                    $detallePedido->sector="candy bar";
-                }
+            $detallePedido->sector= $arrayDetalle[$i]['responsable'];
+
                 
                 
-        
            $detallePedido->GuardarDetalle();
 
            }
 
-        $objDelaRespuesta->idPedido= $idPedido;
+        $objDelaRespuesta->idPedido=$idPedido;
+           
+
            
         return $response->withJson($objDelaRespuesta, 200);
         
@@ -93,9 +60,10 @@ public static function TraerPendientesEmpleado($request, $response, $args)
     $ArrayDeParametros = $request->getParsedBody();
     $token=$ArrayDeParametros['token'];
     $payload=AutentificadorJWT::ObtenerData($token);
-    $idEmpleado=$payload->idEmpleado;
+    $idEmpleado=$payload->idUsuario;
     
    $objDelaRespuesta=Detalle::TraerPendientes($idEmpleado);
+  //$objDelaRespuesta=$payload;
 
     return $response->withJson($objDelaRespuesta, 200);
 
@@ -161,6 +129,10 @@ public static function TiempoRestante($request, $response, $args)
     $tp=strtotime($d->tiempoPreparacion);
     $now=strtotime($ahora);
     $tiempoRestante=$tp-$now;
+    if($tiempoRestante <= 0)
+        {
+            $tiempoRestante=0;
+        }
     $detallesRespuesta->idDetalle=$d->idDetalle;
     $detallesRespuesta->producto=$d->producto;
     

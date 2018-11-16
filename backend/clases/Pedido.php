@@ -1,6 +1,6 @@
 <?php
 
-include_once "Empleado.php";
+include_once "Usuario.php";
 
 class Pedido{
 

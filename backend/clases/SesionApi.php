@@ -1,7 +1,8 @@
 
 <?php
 include_once "Sesion.php";
-include_once "Empleado.php";
+
+include_once "Usuario.php";
 include_once "AutentificadorJWT.php";
 
 class SesionApi
@@ -12,17 +13,17 @@ class SesionApi
          $respuesta= new stdclass();
      	$ArrayDeParametros = $request->getParsedBody();
 	    $usuario=$ArrayDeParametros['usuario'];
-	    $clave=$ArrayDeParametros['clave'];
-        
+        $clave=$ArrayDeParametros['clave'];
+  
 try
 {
 
-    $empleado=Empleado::ValidarEmpleado($usuario,$clave);
+    $usuario=Usuario::ValidarUsuario($usuario,$clave);
     $sesion= new Sesion();
-    $sesion->idEmpleado=$empleado->id;
+    $sesion->idEmpleado=$usuario->id;
     $sesion->horaInicio= date('Y/m/d G:i,s');
     $idSesion=$sesion->IniciarSesion();
-    $datos = array('usuario' => $empleado->usuario,'perfil' => $empleado->perfil, 'idEmpleado' => $empleado->id, 'sector' => $empleado->sector, 'estado' => $empleado->estado, 'idSesion' => $idSesion);
+    $datos = array('usuario' => $usuario->usuario,'perfil' => $usuario->perfil, 'idUsuario' => $usuario->id, 'idSesion' => $idSesion);
     $token= AutentificadorJWT::CrearToken($datos);
     $respuesta= array('token'=>$token,'datos'=> $datos);
 
@@ -30,7 +31,7 @@ try
 catch(Exception  $e)
     {
 
-       echo( $e->getMessage());
+       $respuesta->error = $e->getMessage();
 
     }
 
